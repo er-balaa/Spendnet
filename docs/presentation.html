@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendNest Revenue Intelligence — 5-Slide Presentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #0f172a; }
+    .slide { display: none; min-height: 85vh; }
+    .slide.active { display: flex; }
+  </style>
+</head>
+<body class="text-slate-100 flex flex-col justify-between min-h-screen p-6 md:p-10">
+
+  <!-- Header -->
+  <header class="flex items-center justify-between border-b border-slate-800 pb-4 max-w-6xl w-full mx-auto">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white text-sm">
+        SN
+      </div>
+      <div>
+        <span class="font-bold text-sm tracking-tight text-white">SpendNest</span>
+        <span class="text-xs text-indigo-400 ml-1.5 font-medium">Revenue Intelligence Inbox</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-4 text-xs font-medium text-slate-400">
+      <span>Recruitment Assignment Presentation</span>
+      <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono" id="slide-num">Slide 1 of 5</span>
+    </div>
+  </header>
+
+  <!-- Slide Content Container -->
+  <main class="flex-1 flex items-center justify-center max-w-6xl w-full mx-auto py-6">
+
+    <!-- SLIDE 1 -->
+    <div class="slide active flex-col justify-between bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl w-full" id="slide-1">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/80 px-3 py-1 rounded-full border border-indigo-800">
+          Slide 1 • Findings & Workflow
+        </span>
+        <h1 class="text-3xl font-extrabold text-white mt-4 tracking-tight">
+          Manager Problem, Selected Workflow & Key Evidence Findings
+        </h1>
+        <p class="text-slate-400 text-sm mt-2 max-w-3xl leading-relaxed">
+          Sales managers juggle disconnected dialer logs, partial transcripts, and conflicting status flags. We built an evidence-grounded intelligence workspace.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          <div class="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-rose-400 uppercase">Finding 1: UI Bug</span>
+              <span class="text-[11px] font-mono text-indigo-300 font-bold">M07 Turn 22</span>
+            </div>
+            <h3 class="text-sm font-bold text-white">Mark as Paid Amount Bleed</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Customer A demonstrated that the payment modal retains previous record's amount (<code class="text-rose-300">INR 18,200</code>) rather than current record.
+            </p>
+            <blockquote class="text-[11px] text-slate-400 italic border-l-2 border-rose-500 pl-2">
+              "The amount from the previous item appears in the next one... each time I have to cancel..."
+            </blockquote>
+            <div class="text-[11px] text-slate-400 pt-1 border-t border-slate-700">
+              <strong>Impact:</strong> Escalated to Engineering as High Priority; routed to Internal Note.
+            </div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-purple-400 uppercase">Finding 2: Attribution</span>
+              <span class="text-[11px] font-mono text-indigo-300 font-bold">Call C06</span>
+            </div>
+            <h3 class="text-sm font-bold text-white">Dialer Rep Identity Mismatch</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Source metadata attributes call to <code class="text-purple-300">rep_name: Meera</code>, but spoken transcript explicitly opens with a male caller introducing himself as Ravi.
+            </p>
+            <blockquote class="text-[11px] text-slate-400 italic border-l-2 border-purple-500 pl-2">
+              "Good evening, Mr Nikhil. Good evening. Ravi here. I'll say at the start that this is a cold call."
+            </blockquote>
+            <div class="text-[11px] text-slate-400 pt-1 border-t border-slate-700">
+              <strong>Impact:</strong> Flagged in Sales Coaching to audit shared dialer logins.
+            </div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-amber-400 uppercase">Finding 3: Boundary</span>
+              <span class="text-[11px] font-mono text-indigo-300 font-bold">Call C09</span>
+            </div>
+            <h3 class="text-sm font-bold text-white">Strict Negative Boundary</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Contact suggested reaching out to Business Head Mr Rishabh on LinkedIn, but explicitly forbade citing his name.
+            </p>
+            <blockquote class="text-[11px] text-slate-400 italic border-l-2 border-amber-500 pl-2">
+              "Would it be all right if I mentioned your name when contacting him? No, please don't use my name."
+            </blockquote>
+            <div class="text-[11px] text-slate-400 pt-1 border-t border-slate-700">
+              <strong>Impact:</strong> Deal Next Steps explicitly prohibits citing Vedant.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-800 flex justify-between">
+        <span>Selected Workflow: Filter Dashboard → Triage Inbox → Verify Evidence → Override Routes → Export Manifest</span>
+        <span>SpendNest Revenue Intelligence</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide flex-col justify-between bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl w-full" id="slide-2">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/80 px-3 py-1 rounded-full border border-indigo-800">
+          Slide 2 • Architecture & Choices
+        </span>
+        <h1 class="text-3xl font-extrabold text-white mt-4 tracking-tight">
+          Interface Choices, Key Functionality & Deliberately Rejected Decisions
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+          <div class="space-y-4">
+            <h3 class="text-base font-bold text-indigo-300">Key Implemented Capabilities</h3>
+            <ul class="space-y-3 text-xs text-slate-300 leading-relaxed">
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><strong>Composite Identity:</strong> Keyed strictly on <code>(source_type, source_id)</code> with unique MongoDB compound index.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><strong>Revision Preservation:</strong> Update batch modifies existing record in-place; manual overrides survive all re-imports.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><strong>Evidence Viewer:</strong> 1-based numbered turns with timecodes for meetings and exact quotes for calls.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><strong>Real Output Exports:</strong> Generates real physical report files, JSON/CSV manifests, and downloadable ZIP.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-slate-800/60 border border-rose-900/50 space-y-3">
+            <span class="text-xs font-bold text-rose-400 uppercase tracking-wider">
+              One Deliberately Rejected Decision
+            </span>
+            <h4 class="text-sm font-bold text-white">Fabricating Pipeline Values & Account Joins</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <strong>Considered Alternative:</strong> Building flashy pipeline forecast gauges and automatically merging companies with similar names (e.g. Harborpath Advisory M01 and Harborlight Advisory C01).
+            </p>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <strong>Why Rejected:</strong> The assignment rules explicitly state there is NO CRM opportunity table, and similar names are NOT confirmed account identities.
+            </p>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <strong>Accepted Trade-off:</strong> Prioritized authentic, source-backed metrics (Usable Coverage 18/44) over misleading speculative forecasts.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-800 flex justify-between">
+        <span>Stack: React • Vite • TypeScript • Tailwind CSS • FastAPI • MongoDB</span>
+        <span>SpendNest Revenue Intelligence</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="slide flex-col justify-between bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl w-full" id="slide-3">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/80 px-3 py-1 rounded-full border border-indigo-800">
+          Slide 3 • Taxonomy & Case Study
+        </span>
+        <h1 class="text-3xl font-extrabold text-white mt-4 tracking-tight">
+          Routing Taxonomy, Output Design & One Difficult Case
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+          <div class="space-y-4">
+            <h3 class="text-base font-bold text-indigo-300">5-Category Operational Taxonomy</h3>
+            <div class="space-y-2 text-xs">
+              <div class="p-2.5 rounded-lg bg-purple-950/60 border border-purple-800/60">
+                <strong class="text-purple-300">Sales Coaching:</strong> Rep attribution audits (C06), fee transparency (M03), boundary compliance (C09).
+              </div>
+              <div class="p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800/60">
+                <strong class="text-emerald-300">Deal Next Steps:</strong> Partner terms (M01, C07), developer API pricing (C03), CFO approvals (M03).
+              </div>
+              <div class="p-2.5 rounded-lg bg-blue-950/60 border border-blue-800/60">
+                <strong class="text-blue-300">Customer Follow-up:</strong> Collateral delivery (C05, C08), bug hotfix updates (M07), login token fixes (M09).
+              </div>
+              <div class="p-2.5 rounded-lg bg-amber-950/60 border border-amber-800/60">
+                <strong class="text-amber-300">Internal / Vendor Note:</strong> E-invoicing integration (M02), UI modal bugs (M07), billing engine training (M10).
+              </div>
+              <div class="p-2.5 rounded-lg bg-rose-950/60 border border-rose-800/60">
+                <strong class="text-rose-300">Human Review:</strong> Missing text intake records (26 items), urgent card migration churn risks (M04).
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-3">
+            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">
+              Difficult Routing Case: Cedarwave Distribution (M04)
+            </span>
+            <h4 class="text-sm font-bold text-white">Triple Operational Overlap</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <strong>Conflict:</strong> Existing card programme is terminating in weeks (Customer Follow-up). However, customer has an INR 1.3 crore bank credit line and demands a third-party bank-card feed rather than another prepaid card (Internal Note / Vendor). Simultaneously, a support tooling limitation prevented reassigning departments (Internal Note).
+            </p>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <strong>Resolution:</strong> Rather than forcing M04 into an oversimplified single category, our multi-route engine assigned it to <em>Customer Follow-up</em>, <em>Internal Note</em>, and <em>Human Review</em>.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-800 flex justify-between">
+        <span>Output Organization: conversations/ • by_route/ • manager_brief/ • manifest.json / csv</span>
+        <span>SpendNest Revenue Intelligence</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 4 -->
+    <div class="slide flex-col justify-between bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl w-full" id="slide-4">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/80 px-3 py-1 rounded-full border border-indigo-800">
+          Slide 4 • Validation & Verification
+        </span>
+        <h1 class="text-3xl font-extrabold text-white mt-4 tracking-tight">
+          Validation of Key Metric & Analytical Conclusion
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+          <div class="p-6 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-3">
+            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+              Metric Validation
+            </span>
+            <h4 class="text-base font-bold text-white">Usable Transcript Coverage (18 / 44 = 40.9%)</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <strong>Definition:</strong> Records with usable text (nonblank call transcript or &gt;=1 meeting turn) divided by total distinct source records.
+            </p>
+            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 space-y-1 font-mono text-xs">
+              <div>Total Unique Records: 44 (30 Calls, 14 Meetings)</div>
+              <div>Pre-Update Usable: 17 / 44 (10 Calls, 7 Meetings)</div>
+              <div>Post-Update Usable: 18 / 44 (M07 Rev 2 adds 27 turns)</div>
+              <div>Coverage Rate: 40.9% (Calls 33.3%, Meetings 57.1%)</div>
+            </div>
+            <p class="text-[11px] text-slate-400">
+              * Verified via automated test suite. Missing texts (26 records) are explicitly categorized as "Unusable Text" or "Missing Transcript" without guessing.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-3">
+            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">
+              Analytical Conclusion Validation
+            </span>
+            <h4 class="text-base font-bold text-white">Fee Transparency Friction in Asterloom (M03)</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              <strong>Analytical Claim:</strong> Concealing one-time setup fees inside recurring subscriptions causes customer distrust and stalls closing.
+            </p>
+            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 space-y-2 text-xs">
+              <div class="text-slate-400"><strong>Turn 22:</strong> Rep quotes INR 39,000 annual charge.</div>
+              <div class="text-rose-300"><strong>Turn 23:</strong> Customer pushes back: <em>"Why has that become INR 39,000? You told me INR 26,000."</em></div>
+              <div class="text-slate-400"><strong>Turn 24:</strong> Rep clarifies: INR 26,000 recurring + INR 13,000 setup.</div>
+            </div>
+            <p class="text-[11px] text-slate-400">
+              * Grounded directly in transcript; drives our Sales Coaching coaching rule on fee transparency.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-800 flex justify-between">
+        <span>Verified against automated pytest suite (14 / 14 passing)</span>
+        <span>SpendNest Revenue Intelligence</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 5 -->
+    <div class="slide flex-col justify-between bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl w-full" id="slide-5">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/80 px-3 py-1 rounded-full border border-indigo-800">
+          Slide 5 • Trade-offs & Roadmap
+        </span>
+        <h1 class="text-3xl font-extrabold text-white mt-4 tracking-tight">
+          Trade-offs, AI Usage, Known Limitations & Next Improvements
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+          <div class="space-y-4">
+            <h3 class="text-base font-bold text-indigo-300">Engineering Trade-offs & AI Usage</h3>
+            <ul class="space-y-2.5 text-xs text-slate-300 leading-relaxed">
+              <li class="flex items-start gap-2">
+                <span class="text-indigo-400 font-bold">•</span>
+                <span><strong>Pregenerated Grounded Analysis:</strong> Chose verified, turn-referenced analytical templates over live paid LLM calls to prevent runtime hallucinations and guarantee reproducible test runs.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-indigo-400 font-bold">•</span>
+                <span><strong>Freshness Guardrails:</strong> When source text changes in an update, existing analysis is flagged <code class="text-amber-300">stale_pending_review</code>, preventing stale data presentation.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-indigo-400 font-bold">•</span>
+                <span><strong>AI Assistant Transparency:</strong> Coding assistants were used for frontend component generation and test automation scaffolding; all logic and findings were manually audited.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="space-y-4">
+            <h3 class="text-base font-bold text-indigo-300">Known Limitations & Future Roadmap</h3>
+            <ul class="space-y-2.5 text-xs text-slate-300 leading-relaxed">
+              <li class="flex items-start gap-2">
+                <span class="text-rose-400 font-bold">•</span>
+                <span><strong>Background Dial Records:</strong> 20 calls lack audio/text; intake status is faithfully logged without inventing conversations.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">→</span>
+                <span><strong>Roadmap 1 — Audio Transcription Pipeline:</strong> Ingest raw recordings via local Whisper models to achieve 100% transcript coverage.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">→</span>
+                <span><strong>Roadmap 2 — CRM Bi-directional Sync:</strong> Push verified next steps and action owners directly to Salesforce / HubSpot tasks.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="text-xs text-slate-500 mt-6 pt-4 border-t border-slate-800 flex justify-between">
+        <span>Submitted by Candidate for Volopay Recruitment Assignment • October 2026</span>
+        <span>SpendNest Revenue Intelligence</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Presentation Controls Footer -->
+  <footer class="flex items-center justify-between border-t border-slate-800 pt-4 max-w-6xl w-full mx-auto">
+    <div class="text-xs text-slate-400">
+      Use <kbd class="px-2 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">←</kbd> and <kbd class="px-2 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">→</kbd> arrow keys to navigate
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="prevSlide()" class="px-4 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors">
+        Previous
+      </button>
+      <button onclick="nextSlide()" class="px-4 py-1.5 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">
+        Next Slide
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 5;
+
+    function showSlide(index) {
+      for (let i = 1; i <= totalSlides; i++) {
+        const slide = document.getElementById(`slide-${i}`);
+        if (slide) slide.classList.remove('active');
+      }
+      const active = document.getElementById(`slide-${index}`);
+      if (active) active.classList.add('active');
+      document.getElementById('slide-num').innerText = `Slide ${index} of ${totalSlides}`;
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) showSlide(currentSlide - 1);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+  </script>
+</body>
+</html>
