@@ -217,7 +217,6 @@ exports/
 - **No Paid AI APIs Required:** The application runs 100% offline without external API keys or recurring LLM costs.
 
 ---
-
 ## 10. Submission Deliverables Summary
 
 1. **Working Application:** Running locally at `http://localhost:8000` (FastAPI + React bundle) and `http://localhost:5173` (Vite dev server).
