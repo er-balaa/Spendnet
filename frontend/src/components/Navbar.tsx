@@ -54,7 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTour }) => {
             </div>
             <div className="flex items-center gap-1.5">
               <span className="font-semibold text-xs tracking-tight text-linear-text">
-                Revo
+                SpendNest
               </span>
               <span className="text-[11px] text-linear-dim font-mono">/</span>
               <span className="text-[11px] text-linear-muted font-mono hidden sm:inline">

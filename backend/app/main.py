@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(
-    title="Revo Revenue Intelligence Inbox API",
+    title="SpendNest Revenue Intelligence Inbox API",
     description="Production-grade REST API supporting Conversation Inbox, Routing Taxonomy, Batch Replay & Revisions, Manager Brief, and Exports.",
     version="1.0.0",
     lifespan=lifespan
