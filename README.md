@@ -1,4 +1,4 @@
-# Revo - Revenue Intelligence Inbox — Volopay Recruitment Assignment
+# Spendnet - Revenue Intelligence Inbox — Volopay Recruitment Assignment
 
 A production-grade, full-stack revenue intelligence web application built for sales managers to review calls, meetings, transcripts, and automated notes; understand sales activity; and decide operational next steps.
 
