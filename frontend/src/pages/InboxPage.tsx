@@ -149,32 +149,32 @@ export const InboxPage: React.FC = () => {
         <select
           value={sourceType}
           onChange={e => setSourceType(e.target.value)}
-          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer"
+          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer [color-scheme:dark] dark:bg-[#14171E]"
         >
-          <option value="all">All Types</option>
-          <option value="call">Calls (30)</option>
-          <option value="meeting">Meetings (14)</option>
+          <option value="all" className="bg-[#14171E] text-[#F0F1F3]">All Types</option>
+          <option value="call" className="bg-[#14171E] text-[#F0F1F3]">Calls (30)</option>
+          <option value="meeting" className="bg-[#14171E] text-[#F0F1F3]">Meetings (14)</option>
         </select>
 
         {/* Person Filter */}
         <select
           value={person}
           onChange={e => setPerson(e.target.value)}
-          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer max-w-[160px]"
+          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer max-w-[160px] [color-scheme:dark] dark:bg-[#14171E]"
         >
-          <option value="all">All People</option>
-          <optgroup label="Call Representatives">
+          <option value="all" className="bg-[#14171E] text-[#F0F1F3]">All People</option>
+          <optgroup label="Call Representatives" className="bg-[#0E1015] text-[#8B909A] font-semibold">
             {filterOptions.persons
               .filter(p => p.role === 'Call Representative')
               .map(p => (
-                <option key={p.name} value={p.name}>{p.name}</option>
+                <option key={p.name} value={p.name} className="bg-[#14171E] text-[#F0F1F3]">{p.name}</option>
               ))}
           </optgroup>
-          <optgroup label="Meeting Organizers">
+          <optgroup label="Meeting Organizers" className="bg-[#0E1015] text-[#8B909A] font-semibold">
             {filterOptions.persons
               .filter(p => p.role === 'Meeting Organizer')
               .map(p => (
-                <option key={p.name} value={p.name}>{p.name}</option>
+                <option key={p.name} value={p.name} className="bg-[#14171E] text-[#F0F1F3]">{p.name}</option>
               ))}
           </optgroup>
         </select>
@@ -183,25 +183,25 @@ export const InboxPage: React.FC = () => {
         <select
           value={reviewStatus}
           onChange={e => setReviewStatus(e.target.value)}
-          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer"
+          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer [color-scheme:dark] dark:bg-[#14171E]"
         >
-          <option value="all">All Review States</option>
-          <option value="Reviewed">Reviewed</option>
-          <option value="Awaiting Review">Awaiting Review</option>
-          <option value="Under Review">Under Review</option>
-          <option value="Missing Transcript">Missing Transcript</option>
-          <option value="Unusable Text">Unusable Text</option>
+          <option value="all" className="bg-[#14171E] text-[#F0F1F3]">All Review States</option>
+          <option value="Reviewed" className="bg-[#14171E] text-[#F0F1F3]">Reviewed</option>
+          <option value="Awaiting Review" className="bg-[#14171E] text-[#F0F1F3]">Awaiting Review</option>
+          <option value="Under Review" className="bg-[#14171E] text-[#F0F1F3]">Under Review</option>
+          <option value="Missing Transcript" className="bg-[#14171E] text-[#F0F1F3]">Missing Transcript</option>
+          <option value="Unusable Text" className="bg-[#14171E] text-[#F0F1F3]">Unusable Text</option>
         </select>
 
         {/* Transcript Filter */}
         <select
           value={hasTranscript}
           onChange={e => setHasTranscript(e.target.value)}
-          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer"
+          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer [color-scheme:dark] dark:bg-[#14171E]"
         >
-          <option value="all">All Transcripts</option>
-          <option value="yes">Usable Text</option>
-          <option value="no">Missing / Silent</option>
+          <option value="all" className="bg-[#14171E] text-[#F0F1F3]">All Transcripts</option>
+          <option value="yes" className="bg-[#14171E] text-[#F0F1F3]">Usable Text</option>
+          <option value="no" className="bg-[#14171E] text-[#F0F1F3]">Missing / Silent</option>
         </select>
 
         {/* Clear Filters */}

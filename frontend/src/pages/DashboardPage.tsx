@@ -107,11 +107,11 @@ export const DashboardPage: React.FC = () => {
             <select
               value={sourceTypeFilter}
               onChange={e => setSourceTypeFilter(e.target.value)}
-              className="bg-transparent text-linear-text text-xs focus:outline-hidden cursor-pointer"
+              className="bg-transparent text-linear-text text-xs focus:outline-hidden cursor-pointer [color-scheme:dark] dark:bg-[#14171E]"
             >
-              <option value="all">All Types</option>
-              <option value="call">Calls (30)</option>
-              <option value="meeting">Meetings (14)</option>
+              <option value="all" className="bg-[#14171E] text-[#F0F1F3]">All Types</option>
+              <option value="call" className="bg-[#14171E] text-[#F0F1F3]">Calls (30)</option>
+              <option value="meeting" className="bg-[#14171E] text-[#F0F1F3]">Meetings (14)</option>
             </select>
           </div>
 
@@ -120,21 +120,21 @@ export const DashboardPage: React.FC = () => {
             <select
               value={personFilter}
               onChange={e => setPersonFilter(e.target.value)}
-              className="bg-transparent text-linear-text text-xs focus:outline-hidden max-w-[160px] cursor-pointer"
+              className="bg-transparent text-linear-text text-xs focus:outline-hidden max-w-[160px] cursor-pointer [color-scheme:dark] dark:bg-[#14171E]"
             >
-              <option value="all">All People</option>
-              <optgroup label="Call Representatives">
+              <option value="all" className="bg-[#14171E] text-[#F0F1F3]">All People</option>
+              <optgroup label="Call Representatives" className="bg-[#0E1015] text-[#8B909A] font-semibold">
                 {filterOptions.persons
                   .filter(p => p.role === 'Call Representative')
                   .map(p => (
-                    <option key={p.name} value={p.name}>{p.name}</option>
+                    <option key={p.name} value={p.name} className="bg-[#14171E] text-[#F0F1F3]">{p.name}</option>
                   ))}
               </optgroup>
-              <optgroup label="Meeting Organizers">
+              <optgroup label="Meeting Organizers" className="bg-[#0E1015] text-[#8B909A] font-semibold">
                 {filterOptions.persons
                   .filter(p => p.role === 'Meeting Organizer')
                   .map(p => (
-                    <option key={p.name} value={p.name}>{p.name}</option>
+                    <option key={p.name} value={p.name} className="bg-[#14171E] text-[#F0F1F3]">{p.name}</option>
                   ))}
               </optgroup>
             </select>

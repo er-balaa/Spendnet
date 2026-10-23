@@ -6,8 +6,7 @@ import {
   Workflow,
   FileText,
   FolderArchive,
-  RefreshCw,
-  HelpCircle
+  RefreshCw
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -110,19 +109,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ recordsCount, onOpenTour }) =>
           </nav>
         </div>
 
-        {/* Linear Compact Contract Callout */}
-        <div id="tour-sidebar-rules" className="p-2.5 bg-linear-surface border border-linear-border rounded-md space-y-1">
-          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-linear-text">
-            <HelpCircle className="w-3 h-3 text-[#D6ED17]" />
-            <span>Composite Key</span>
-          </div>
-          <p className="text-[10px] text-linear-dim font-mono leading-relaxed">
-            (source_type, source_id)
-          </p>
-          <p className="text-[10px] text-linear-muted leading-tight">
-            Manual overrides strictly survive imports.
-          </p>
-        </div>
       </div>
 
       <div className="p-2.5 border-t border-linear-border text-[10px] text-linear-dim font-mono flex items-center justify-between">

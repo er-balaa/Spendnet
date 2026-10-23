@@ -143,10 +143,40 @@ html:not(.dark) aside {
   border-right-color: rgba(0, 0, 0, 0.08) !important;
 }
 
-html:not(.dark) select option {
+/* Select & Option styling across themes (Forces pure dark mode popovers) */
+select {
+  color-scheme: dark;
+}
+
+html:not(.dark) select {
+  color-scheme: light;
+}
+
+html:not(.dark) select option,
+html:not(.dark) select optgroup {
   background-color: #FFFFFF !important;
   color: #111215 !important;
 }
+
+html.dark select {
+  color-scheme: dark !important;
+  background-color: #14171E !important;
+  color: #F0F1F3 !important;
+}
+
+html.dark select option {
+  background-color: #14171E !important;
+  color: #F0F1F3 !important;
+  color-scheme: dark !important;
+}
+
+html.dark select optgroup {
+  background-color: #0E1015 !important;
+  color: #8B909A !important;
+  font-weight: 600 !important;
+  color-scheme: dark !important;
+}
+
 
 /* Linear Ultra-minimal 4px scrollbars */
 ::-webkit-scrollbar {

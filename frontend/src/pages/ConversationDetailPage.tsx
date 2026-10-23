@@ -104,13 +104,13 @@ export const ConversationDetailPage: React.FC = () => {
               value={conversation.review_status}
               disabled={isUpdatingStatus}
               onChange={e => handleStatusChange(e.target.value)}
-              className="bg-transparent text-linear-text font-medium text-xs focus:outline-hidden cursor-pointer"
+              className="bg-transparent text-linear-text font-medium text-xs focus:outline-hidden cursor-pointer [color-scheme:dark] dark:bg-[#14171E]"
             >
-              <option value="Reviewed">Reviewed</option>
-              <option value="Awaiting Review">Awaiting Review</option>
-              <option value="Under Review">Under Review</option>
-              <option value="Missing Transcript">Missing Transcript</option>
-              <option value="Unusable Text">Unusable Text</option>
+              <option value="Reviewed" className="bg-[#14171E] text-[#F0F1F3]">Reviewed</option>
+              <option value="Awaiting Review" className="bg-[#14171E] text-[#F0F1F3]">Awaiting Review</option>
+              <option value="Under Review" className="bg-[#14171E] text-[#F0F1F3]">Under Review</option>
+              <option value="Missing Transcript" className="bg-[#14171E] text-[#F0F1F3]">Missing Transcript</option>
+              <option value="Unusable Text" className="bg-[#14171E] text-[#F0F1F3]">Unusable Text</option>
             </select>
           </div>
 
