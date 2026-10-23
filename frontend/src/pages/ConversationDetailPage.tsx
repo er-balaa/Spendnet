@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft, Edit3, ShieldAlert, CheckCircle2, Clock, Calendar, User,
-  FileCode, CheckSquare, Sparkles, ExternalLink, RefreshCw
+  ArrowLeft, Edit3, ShieldAlert, Clock, Calendar, User,
+  FileCode, CheckSquare, Sparkles, Hash
 } from 'lucide-react';
 import { fetchConversationDetail, updateConversationReviewStatus } from '../services/api';
 import { ConversationDetail } from '../types';
@@ -57,23 +57,23 @@ export const ConversationDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="p-12 flex flex-col items-center justify-center min-h-[400px]">
-        <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-        <span className="text-xs font-semibold text-slate-500 mt-3">Loading conversation details...</span>
+        <div className="w-5 h-5 border-2 border-[#D6ED17] border-t-transparent rounded-full animate-spin" />
+        <span className="text-xs text-linear-dim font-mono mt-2">Loading conversation...</span>
       </div>
     );
   }
 
   if (error || !conversation) {
     return (
-      <div className="p-8 max-w-4xl mx-auto">
+      <div className="p-6 max-w-4xl mx-auto">
         <button
           onClick={() => navigate('/inbox')}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 mb-4"
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-[#D6ED17] hover:underline mb-3 cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Inbox
+          <ArrowLeft className="w-3.5 h-3.5" /> Back to Inbox
         </button>
-        <div className="p-6 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs">
-          {error || 'Conversation not found.'}
+        <div className="p-4 bg-linear-panel border border-linear-border rounded-lg text-linear-text text-xs">
+          {error || 'Conversation record not found.'}
         </div>
       </div>
     );
@@ -83,25 +83,28 @@ export const ConversationDetailPage: React.FC = () => {
   const turns = conversation.transcript_payload?.turns || [];
 
   return (
-    <div className="p-8 space-y-6 max-w-7xl mx-auto">
-      {/* Top Navigation */}
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 space-y-4 max-w-[1600px] mx-auto bg-linear-bg text-linear-text">
+      {/* Linear Top Bar */}
+      <div className="flex items-center justify-between border-b border-linear-border pb-3">
         <button
           onClick={() => navigate('/inbox')}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-indigo-600 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs text-linear-muted hover:text-linear-text transition-colors cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Inbox
+          <ArrowLeft className="w-3 h-3" />
+          <span>Inbox</span>
+          <span className="text-linear-dim">/</span>
+          <span className="font-mono text-linear-text font-semibold">{conversation.record_ref}</span>
         </button>
 
         <div className="flex items-center gap-2">
-          {/* Status Selector */}
-          <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg p-1 text-xs shadow-2xs">
-            <span className="text-slate-400 pl-2 font-medium">Status:</span>
+          {/* Review Status Selector */}
+          <div className="flex items-center gap-1.5 bg-linear-surface border border-linear-border rounded-md px-2.5 py-1 text-xs">
+            <span className="text-linear-dim text-[11px] font-mono">Review:</span>
             <select
               value={conversation.review_status}
               disabled={isUpdatingStatus}
               onChange={e => handleStatusChange(e.target.value)}
-              className="bg-transparent text-slate-800 font-semibold focus:outline-hidden pr-2 cursor-pointer"
+              className="bg-transparent text-linear-text font-medium text-xs focus:outline-hidden cursor-pointer"
             >
               <option value="Reviewed">Reviewed</option>
               <option value="Awaiting Review">Awaiting Review</option>
@@ -113,37 +116,38 @@ export const ConversationDetailPage: React.FC = () => {
 
           <button
             onClick={() => setIsEditingRoute(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-2xs transition-colors"
+            className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold text-[#08090A] bg-[#D6ED17] hover:bg-[#cde410] rounded-md transition-all cursor-pointer shadow-xs"
           >
-            <Edit3 className="w-3.5 h-3.5" />
-            Edit Routes
+            <Edit3 className="w-3 h-3 text-[#08090A]" />
+            <span>Override</span>
+            <kbd className="kbd text-[9px] bg-black/10 border-black/20 text-[#08090A] ml-1">E</kbd>
           </button>
         </div>
       </div>
 
-      {/* Header Card */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      {/* Header Record Card */}
+      <div className="bg-linear-panel rounded-lg border border-linear-border p-4 space-y-3">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="font-mono font-bold text-sm px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-800 border border-slate-200">
+            <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+              <span className="font-mono font-bold text-xs px-2 py-0.5 rounded bg-white/[0.06] text-linear-text">
                 {conversation.record_ref}
               </span>
-              <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-indigo-50 text-indigo-700 uppercase">
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono uppercase bg-white/[0.04] text-linear-dim">
                 {conversation.source_type}
               </span>
-              <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600">
-                Revision {conversation.applied_revision}
+              <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/[0.04] text-linear-dim">
+                Rev {conversation.applied_revision}
               </span>
               <StatusBadge status={conversation.review_status} freshness={conversation.analysis_freshness} />
             </div>
 
-            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-base sm:text-lg font-semibold text-linear-text tracking-tight font-heading">
               {conversation.title}
             </h1>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
             {conversation.assigned_routes.map(r => (
               <RouteBadge
                 key={r}
@@ -155,63 +159,63 @@ export const ConversationDetailPage: React.FC = () => {
         </div>
 
         {/* Metadata Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-100 text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-linear-border text-xs font-mono">
           <div>
-            <div className="text-slate-400 font-medium">Participant</div>
-            <div className="font-semibold text-slate-800 flex items-center gap-1 mt-0.5">
-              <User className="w-3.5 h-3.5 text-slate-400" />
+            <div className="text-linear-dim text-[10px] uppercase">Participant</div>
+            <div className="text-linear-text flex items-center gap-1 mt-0.5 font-sans font-medium">
+              <User className="w-3 h-3 text-linear-dim" />
               {conversation.person_name || 'Unassigned'}
             </div>
-            <div className="text-[11px] text-slate-400">{conversation.person_role}</div>
+            <div className="text-[10px] text-linear-dim">{conversation.person_role}</div>
           </div>
 
           <div>
-            <div className="text-slate-400 font-medium">Recorded Date & Time</div>
-            <div className="font-semibold text-slate-800 flex items-center gap-1 mt-0.5">
-              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+            <div className="text-linear-dim text-[10px] uppercase">Timestamp</div>
+            <div className="text-linear-text flex items-center gap-1 mt-0.5">
+              <Calendar className="w-3 h-3 text-linear-dim" />
               21 Aug 2026
             </div>
-            <div className="text-[11px] text-slate-400 font-mono">
+            <div className="text-[10px] text-linear-dim">
               {conversation.started_at ? conversation.started_at.slice(11, 19) : '--:--'} UTC
             </div>
           </div>
 
           <div>
-            <div className="text-slate-400 font-medium">Duration & Capture</div>
-            <div className="font-semibold text-slate-800 flex items-center gap-1 mt-0.5">
-              <Clock className="w-3.5 h-3.5 text-slate-400" />
-              {conversation.duration_seconds ? `${conversation.duration_seconds}s` : 'Not recorded'}
+            <div className="text-linear-dim text-[10px] uppercase">Duration & Status</div>
+            <div className="text-linear-text flex items-center gap-1 mt-0.5">
+              <Clock className="w-3 h-3 text-linear-dim" />
+              {conversation.duration_seconds ? `${conversation.duration_seconds}s` : 'N/A'}
             </div>
-            <div className="text-[11px] text-slate-400">
+            <div className="text-[10px] text-linear-dim">
               {conversation.payload.recording_status || (conversation.is_connected ? 'Connected' : 'Not connected')}
             </div>
           </div>
 
           <div>
-            <div className="text-slate-400 font-medium">Source Identity</div>
-            <div className="font-mono text-[11px] text-slate-700 truncate mt-0.5" title={conversation.source_id}>
+            <div className="text-linear-dim text-[10px] uppercase">Source ID</div>
+            <div className="text-[#D6ED17] truncate mt-0.5 text-[11px]" title={conversation.source_id}>
               {conversation.source_id}
             </div>
-            <div className="text-[11px] text-slate-400">Batch: {conversation.batch_id}</div>
+            <div className="text-[10px] text-linear-dim">Batch: {conversation.batch_id}</div>
           </div>
         </div>
       </div>
 
-      {/* Freshness Alert Banner if Stale */}
+      {/* Stale Warning Banner if applicable */}
       {conversation.analysis_freshness === 'stale_pending_review' && (
-        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
-          <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-          <div className="text-xs text-amber-900">
-            <span className="font-bold">Analysis Stale / Pending Review: </span>
-            A newer source revision ({conversation.applied_revision}) arrived with updated transcript content. The existing routing override is preserved, but you should review the newly supplied text below and confirm the review status.
+        <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-md flex items-start gap-2.5 text-xs text-amber-200">
+          <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <div>
+            <span className="font-semibold text-amber-300">Analysis Stale / Pending Review: </span>
+            A newer source revision ({conversation.applied_revision}) arrived with updated transcript content. Previous manual override is preserved, but you should verify newly supplied turns.
           </div>
         </div>
       )}
 
       {/* Two-Column Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Transcript & Raw Evidence (7 Cols) */}
-        <div className="lg:col-span-7 space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        {/* Left: Transcript & Turns (7 Cols) */}
+        <div className="lg:col-span-7 space-y-3">
           <EvidenceViewer
             sourceType={conversation.source_type}
             callTranscript={conversation.call_transcript}
@@ -221,20 +225,20 @@ export const ConversationDetailPage: React.FC = () => {
           />
 
           {/* Toggle Raw Source Payload */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4">
+          <div className="bg-linear-panel rounded-lg border border-linear-border p-3">
             <button
               onClick={() => setShowRawPayload(!showRawPayload)}
-              className="w-full flex items-center justify-between text-xs font-semibold text-slate-700 hover:text-slate-900"
+              className="w-full flex items-center justify-between text-xs text-linear-muted hover:text-linear-text cursor-pointer"
             >
-              <div className="flex items-center gap-2">
-                <FileCode className="w-4 h-4 text-indigo-600" />
-                <span>Inspect Raw Envelope & Source Payload</span>
+              <div className="flex items-center gap-1.5">
+                <FileCode className="w-3.5 h-3.5 text-[#D6ED17]" />
+                <span className="font-mono text-[11px]">raw_envelope_payload.json</span>
               </div>
-              <span className="text-slate-400">{showRawPayload ? 'Hide' : 'Show'}</span>
+              <span className="text-[10px] font-mono text-linear-dim">{showRawPayload ? 'collapse' : 'expand'}</span>
             </button>
 
             {showRawPayload && (
-              <pre className="mt-4 p-4 bg-slate-900 text-slate-200 rounded-lg text-[11px] font-mono overflow-x-auto max-h-96">
+              <pre className="mt-2.5 p-3 bg-linear-bg text-linear-muted border border-linear-border rounded text-[10px] font-mono overflow-x-auto max-h-80">
                 {JSON.stringify(
                   {
                     source_type: conversation.source_type,
@@ -251,52 +255,53 @@ export const ConversationDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column: Intelligence, Findings & Actions (5 Cols) */}
-        <div className="lg:col-span-5 space-y-6">
+        {/* Right: Rationale, Findings & Actions (5 Cols) */}
+        <div className="lg:col-span-5 space-y-3">
           {/* Routing Rationale Card */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Routing Rationale & Decisions
-            </h3>
-            <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100">
+          <div className="bg-linear-panel p-4 rounded-lg border border-linear-border space-y-2">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-linear-dim">
+              Routing Rationale
+            </div>
+            <p className="text-xs text-linear-text leading-relaxed bg-linear-surface p-2.5 rounded border border-linear-border">
               {conversation.route_reasoning || 'No specific routing reasoning recorded.'}
             </p>
             {conversation.manual_route_override && (
-              <div className="text-[11px] text-indigo-700 bg-indigo-50/70 p-2.5 rounded-lg border border-indigo-100">
-                <span className="font-bold">Manager Override Active: </span>
-                {conversation.review_notes || 'Manual override saved in database.'}
+              <div className="text-[11px] text-[#D6ED17] bg-[#D6ED17]/10 p-2 rounded border border-[#D6ED17]/25 font-mono">
+                <strong>OVERRIDE: </strong> {conversation.review_notes || 'Manual override recorded.'}
               </div>
             )}
           </div>
 
           {/* Key Findings Card */}
           {analysis && analysis.key_findings && analysis.key_findings.length > 0 && (
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-                Evidence-Backed Findings
-              </h3>
+            <div className="bg-linear-panel p-4 rounded-lg border border-linear-border space-y-3">
+              <div className="flex items-center justify-between border-b border-linear-border pb-2">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-linear-dim">
+                  Evidence-Backed Findings
+                </span>
+                <span className="text-[10px] font-mono text-linear-dim">{analysis.key_findings.length} points</span>
+              </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {analysis.key_findings.map((f, i) => (
-                  <div key={i} className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/60 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-slate-900">{f.topic}</span>
-                      <span className="text-[10px] font-mono text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded">
+                  <div key={i} className="p-2.5 rounded bg-linear-surface border border-linear-border space-y-1.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold text-xs text-linear-text">{f.topic}</span>
+                      <span className="text-[9px] font-mono text-[#D6ED17] bg-[#D6ED17]/10 px-1.5 py-0.2 rounded border border-[#D6ED17]/20">
                         {f.evidence_ref}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-700 leading-relaxed">{f.finding}</p>
+                    <p className="text-xs text-linear-muted leading-relaxed">{f.finding}</p>
 
                     {f.exact_quote && (
-                      <blockquote className="text-[11px] text-slate-600 italic bg-white p-2 rounded border-l-2 border-indigo-500">
+                      <blockquote className="text-[11px] text-linear-text italic bg-linear-bg p-2 rounded border-l-2 border-[#D6ED17] font-mono leading-relaxed">
                         "{f.exact_quote}"
                       </blockquote>
                     )}
 
                     {f.screen_rule_impact && (
-                      <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-200/60">
-                        <span className="font-semibold text-slate-700">Product Impact: </span>
+                      <div className="text-[10px] text-linear-dim pt-1 border-t border-linear-border/60">
+                        <span className="text-linear-muted">Impact: </span>
                         {f.screen_rule_impact}
                       </div>
                     )}
@@ -308,28 +313,25 @@ export const ConversationDetailPage: React.FC = () => {
 
           {/* Recommended Next Actions */}
           {analysis && analysis.recommended_actions && analysis.recommended_actions.length > 0 && (
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                <CheckSquare className="w-3.5 h-3.5 text-emerald-600" />
-                Recommended Next Steps
-              </h3>
+            <div className="bg-linear-panel p-4 rounded-lg border border-linear-border space-y-2">
+              <div className="text-[10px] font-mono uppercase tracking-wider text-linear-dim">
+                Recommended Actions
+              </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {analysis.recommended_actions.map((act, i) => (
-                  <div key={i} className="p-3 rounded-lg border border-slate-100 bg-white shadow-2xs space-y-1.5">
+                  <div key={i} className="p-2.5 rounded bg-linear-surface border border-linear-border space-y-1">
                     <div className="flex items-start justify-between gap-2">
-                      <span className="text-xs font-semibold text-slate-900">{act.action}</span>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                        act.priority === 'High' ? 'bg-rose-50 text-rose-700' : 'bg-slate-100 text-slate-700'
-                      }`}>
+                      <span className="text-xs font-medium text-linear-text">{act.action}</span>
+                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/[0.04] text-linear-muted">
                         {act.priority}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 text-[10px] text-slate-500">
-                      <span>Owner: <strong className="text-slate-700 font-mono">{act.owner || 'Unassigned in text'}</strong></span>
+                    <div className="flex items-center gap-2 text-[10px] text-linear-dim font-mono">
+                      <span>Owner: <strong className="text-[#D6ED17]">{act.owner || 'Unassigned'}</strong></span>
                       {act.due_timeline && (
-                        <span>• Timeline: <strong className="text-slate-700">{act.due_timeline}</strong></span>
+                        <span>• {act.due_timeline}</span>
                       )}
                     </div>
                   </div>
@@ -338,14 +340,13 @@ export const ConversationDetailPage: React.FC = () => {
             </div>
           )}
 
-          {/* Explicit Limitations & Uncertainty */}
+          {/* Boundaries & Uncertainty */}
           {analysis && analysis.limitations_and_uncertainties && (
-            <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                <ShieldAlert className="w-3.5 h-3.5 text-slate-400" />
-                Evidence Boundaries & Uncertainty
-              </h3>
-              <ul className="list-disc list-inside space-y-1 text-xs text-slate-600 leading-relaxed">
+            <div className="bg-linear-panel p-4 rounded-lg border border-linear-border space-y-1.5 text-xs">
+              <div className="text-[10px] font-mono uppercase tracking-wider text-linear-dim">
+                Evidence Boundaries
+              </div>
+              <ul className="list-disc list-inside space-y-1 text-linear-dim leading-relaxed text-[11px]">
                 {analysis.limitations_and_uncertainties.map((u, i) => (
                   <li key={i}>{u}</li>
                 ))}

@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(
-    title="SpendNest Revenue Intelligence Inbox API",
+    title="Revo Revenue Intelligence Inbox API",
     description="Production-grade REST API supporting Conversation Inbox, Routing Taxonomy, Batch Replay & Revisions, Manager Brief, and Exports.",
     version="1.0.0",
     lifespan=lifespan
@@ -59,19 +59,17 @@ def health_check():
     try:
         db.command("ping")
         count = db.conversations.count_documents({})
-        is_atlas = "mongodb+srv://" in settings.mongodb_url
         return {
             "status": "healthy",
             "database": "connected",
-            "cluster_type": "MongoDB Atlas" if is_atlas else "Self-hosted / Local",
+            "storage_engine": "Local File Store (Zero-Dependency)",
             "database_name": settings.database_name,
             "unique_records": count
         }
     except Exception as e:
         return {
             "status": "unhealthy",
-            "database_error": str(e),
-            "hint": "For MongoDB Atlas, ensure IP 0.0.0.0/0 is added in Network Access and credentials are valid."
+            "database_error": str(e)
         }
 
 @app.get("/health")
@@ -79,9 +77,14 @@ def health_check_root():
     return health_check()
 
 # Mount built frontend if available
-frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
+potential_dist_paths = [
+    Path(__file__).resolve().parent.parent.parent / "frontend" / "dist",
+    Path(__file__).resolve().parent.parent / "frontend" / "dist",
+    Path("/app/frontend/dist")
+]
+frontend_dist = next((p for p in potential_dist_paths if p.exists()), None)
 
-if frontend_dist.exists():
+if frontend_dist and (frontend_dist / "index.html").exists():
     app.mount("/assets", StaticFiles(directory=str(frontend_dist / "assets")), name="assets")
 
     @app.get("/{full_path:path}")

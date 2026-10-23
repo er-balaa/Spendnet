@@ -11,6 +11,7 @@ import { ExportsPage } from './pages/ExportsPage';
 import { ImportReplayPage } from './pages/ImportReplayPage';
 import { fetchHealth } from './services/api';
 import { UserGuideTour } from './components/UserGuideTour';
+import { ThemeProvider } from './context/ThemeContext';
 
 export const App: React.FC = () => {
   const [recordsCount, setRecordsCount] = useState<number>(44);
@@ -36,27 +37,29 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
-        <Navbar onOpenTour={() => setIsTourOpen(true)} />
-        <div className="flex flex-1">
-          <Sidebar recordsCount={recordsCount} onOpenTour={() => setIsTourOpen(true)} />
-          <main className="flex-1 overflow-x-hidden">
-            <Routes>
-              <Route path="/" element={<DashboardPage />} />
-              <Route path="/inbox" element={<InboxPage />} />
-              <Route path="/conversations/:sourceType/:sourceId" element={<ConversationDetailPage />} />
-              <Route path="/routing" element={<RoutingAnalysisPage />} />
-              <Route path="/brief" element={<ManagerBriefPage />} />
-              <Route path="/exports" element={<ExportsPage />} />
-              <Route path="/imports" element={<ImportReplayPage />} />
-            </Routes>
-          </main>
+    <ThemeProvider>
+      <BrowserRouter>
+        <div className="h-screen flex flex-col bg-[#090A0D] text-[#F3F4F6] selection:bg-[#D6ED17] selection:text-[#090A0D] transition-colors duration-200 overflow-hidden">
+          <Navbar onOpenTour={() => setIsTourOpen(true)} />
+          <div className="flex flex-1 min-h-0 overflow-hidden">
+            <Sidebar recordsCount={recordsCount} onOpenTour={() => setIsTourOpen(true)} />
+            <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden bg-[#090A0D] transition-colors duration-200">
+              <Routes>
+                <Route path="/" element={<DashboardPage />} />
+                <Route path="/inbox" element={<InboxPage />} />
+                <Route path="/conversations/:sourceType/:sourceId" element={<ConversationDetailPage />} />
+                <Route path="/routing" element={<RoutingAnalysisPage />} />
+                <Route path="/brief" element={<ManagerBriefPage />} />
+                <Route path="/exports" element={<ExportsPage />} />
+                <Route path="/imports" element={<ImportReplayPage />} />
+              </Routes>
+            </main>
+          </div>
+          {/* Interactive User Guide Walkthrough Modal */}
+          <UserGuideTour isOpen={isTourOpen} onClose={() => setIsTourOpen(false)} />
         </div>
-        {/* Interactive User Guide Walkthrough Modal */}
-        <UserGuideTour isOpen={isTourOpen} onClose={() => setIsTourOpen(false)} />
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 

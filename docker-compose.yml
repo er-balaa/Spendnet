@@ -5,24 +5,19 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: spendnest_app
     ports:
       - "8000:8000"
     environment:
-      - MONGODB_URL=${MONGODB_URL:-mongodb://mongo:27017}
       - DATABASE_NAME=spendnest_revenue_intelligence
       - PORT=8000
       - HOST=0.0.0.0
       - CORS_ORIGINS=*
-    depends_on:
-      - mongo
-
-  mongo:
-    image: mongo:7.0
-    restart: always
-    ports:
-      - "27017:27017"
+      - STORAGE_FILE_PATH=/app/data/spendnest_store.json
+      - INITIAL_DATA_PATH=/app/data/01_initial.json
+      - UPDATE_DATA_PATH=/app/data/02_update.json
+      - EXPORTS_DIR=/app/exports
     volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:
+      - ./data:/app/data
+      - ./exports:/app/exports
+    restart: unless-stopped

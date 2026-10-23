@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Layers, Database, Download, RefreshCw, Calendar, Clock, CheckCircle, Lightbulb } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Layers, Download, RefreshCw, Calendar, Search, Sun, Moon } from 'lucide-react';
 import { getExportDownloadUrl, fetchHealth } from '../services/api';
+import { useTheme } from '../context/ThemeContext';
 
 interface NavbarProps {
   onOpenTour?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenTour }) => {
-  const [dbStatus, setDbStatus] = useState<{ status: string; unique_records?: number; cluster_type?: string } | null>(null);
+  const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+  const [dbStatus, setDbStatus] = useState<{ status: string; unique_records?: number } | null>(null);
 
   const checkHealth = async () => {
     try {
@@ -25,87 +28,118 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenTour }) => {
     return () => clearInterval(interval);
   }, []);
 
+  // Global keyboard shortcut listeners (Raycast style)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // ⌘K or Ctrl+K -> Search Inbox
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        navigate('/inbox');
+        const input = document.querySelector<HTMLInputElement>('input[type="text"]');
+        if (input) input.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate]);
+
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-2xs">
-      <div className="flex items-center justify-between px-6 py-3">
-        {/* Brand / Logo */}
+    <header className="sticky top-0 z-40 h-12 shrink-0 bg-linear-bg/90 backdrop-blur-md border-b border-linear-border flex items-center transition-colors">
+      <div className="flex items-center justify-between px-4 w-full">
+        {/* Left: Brand + Workspace context */}
         <div className="flex items-center gap-3">
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-xs group-hover:bg-indigo-700 transition-colors">
-              <Layers className="w-5 h-5" />
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-6 h-6 rounded-md bg-[#151619] border border-white/[0.1] flex items-center justify-center text-[#D6ED17] group-hover:border-[#D6ED17]/60 transition-colors">
+              <Layers className="w-3.5 h-3.5 text-[#D6ED17]" />
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-base tracking-tight text-slate-900">SpendNest</span>
-                <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-indigo-50 text-indigo-700 rounded border border-indigo-100">
-                  Revenue Intelligence
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500">Sales Manager Inbox & Analysis</p>
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-xs tracking-tight text-linear-text">
+                Revo
+              </span>
+              <span className="text-[11px] text-linear-dim font-mono">/</span>
+              <span className="text-[11px] text-linear-muted font-mono hidden sm:inline">
+                Revenue Intel
+              </span>
             </div>
           </Link>
+
+          <span className="h-3 w-[1px] bg-linear-border mx-1 hidden md:block" />
+
+          {/* Quick Date Scope */}
+          <div className="hidden md:flex items-center gap-1.5 text-[11px] text-linear-muted font-mono">
+            <Calendar className="w-3 h-3 text-linear-dim" />
+            <span>21 Aug 2026</span>
+          </div>
         </div>
 
-        {/* Status Badges & Quick Controls */}
-        <div className="flex items-center gap-2.5">
-          {/* Active Date & Timezone */}
-          <div id="tour-date-time" className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
-            <span className="font-medium text-slate-700">21 Aug 2026</span>
-            <span className="text-slate-300">|</span>
-            <Clock className="w-3.5 h-3.5 text-slate-400" />
-            <span>Asia/Kolkata (UTC+05:30)</span>
+        {/* Center: Raycast-style Command Trigger */}
+        <div className="flex-1 max-w-sm mx-4 hidden sm:block">
+          <button
+            type="button"
+            onClick={() => navigate('/inbox')}
+            className="w-full flex items-center justify-between px-2.5 py-1 text-xs text-linear-muted bg-linear-surface hover:bg-linear-hover border border-linear-border rounded-md transition-colors cursor-pointer group"
+          >
+            <div className="flex items-center gap-2">
+              <Search className="w-3 h-3 text-linear-dim group-hover:text-linear-text transition-colors" />
+              <span className="text-[11px]">Search conversations, transcripts, reps...</span>
+            </div>
+            <kbd className="kbd">⌘K</kbd>
+          </button>
+        </div>
+
+        {/* Right: Pro Status & Utility Controls */}
+        <div className="flex items-center gap-2">
+          {/* Store Status Indicator */}
+          <div
+            id="tour-db-status"
+            className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-linear-surface border border-linear-border text-[11px] font-mono text-linear-muted"
+            title="Local Store Health"
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                dbStatus?.status === 'healthy' ? 'bg-[#D6ED17] shadow-[0_0_6px_#D6ED17]' : 'bg-rose-500'
+              }`}
+            />
+            <span className="text-linear-text font-medium">
+              {dbStatus?.status === 'healthy' ? `${dbStatus.unique_records ?? 44} recs` : 'Offline'}
+            </span>
           </div>
 
-          {/* Database Health Status */}
-          <div id="tour-db-status" className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
-            <Database className="w-3.5 h-3.5 text-slate-400" />
-            {dbStatus?.status === 'healthy' ? (
-              <span className="flex items-center gap-1.5 text-emerald-700 font-medium">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                {dbStatus.cluster_type === 'MongoDB Atlas' ? 'Atlas' : 'MongoDB'}: {dbStatus.unique_records ?? 44} records
-              </span>
+          {/* Theme Switcher Toggle */}
+          <button
+            id="theme-switch-btn"
+            type="button"
+            onClick={toggleTheme}
+            className="p-1.5 text-linear-muted hover:text-linear-text bg-linear-surface hover:bg-linear-hover border border-linear-border rounded-md transition-colors cursor-pointer"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-3.5 h-3.5 text-[#D6ED17]" />
             ) : (
-              <span className="flex items-center gap-1.5 text-rose-600 font-medium">
-                <span className="w-2 h-2 rounded-full bg-rose-500" />
-                MongoDB: Connecting...
-              </span>
+              <Moon className="w-3.5 h-3.5 text-[#606060]" />
             )}
-          </div>
+          </button>
 
-          {/* Download Exports Button */}
+          {/* Quick Export ZIP */}
           <a
             id="tour-export-zip"
             href={getExportDownloadUrl()}
             download="spendnest_revenue_intelligence_exports.zip"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg shadow-2xs transition-colors"
-            title="Download full export archive with manifest"
+            className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-linear-text bg-linear-surface hover:bg-linear-hover border border-linear-border rounded-md transition-colors cursor-pointer"
           >
-            <Download className="w-3.5 h-3.5 text-indigo-600" />
-            <span className="hidden sm:inline">Export ZIP</span>
+            <Download className="w-3 h-3 text-linear-dim" />
+            <span>Export</span>
           </a>
 
-          {/* Link to Import Replay Controls */}
+          {/* Primary Action Button: Replay & Update */}
           <Link
             id="tour-replay-controls"
             to="/imports"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-2xs transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1 text-[11px] font-semibold text-[#08090A] bg-[#D6ED17] hover:bg-[#cde410] rounded-md transition-all cursor-pointer shadow-xs active:scale-98"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Replay & Update</span>
+            <RefreshCw className="w-3 h-3 text-[#08090A]" />
+            <span>Replay</span>
           </Link>
-
-          {/* User Guide Interactive Tour Button */}
-          <button
-            id="tour-guide-button"
-            type="button"
-            onClick={onOpenTour}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 rounded-lg shadow-2xs transition-colors cursor-pointer"
-            title="Open Interactive User Guide"
-          >
-            <Lightbulb className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
-            <span className="hidden md:inline">User Guide</span>
-          </button>
         </div>
       </div>
     </header>

@@ -30,14 +30,14 @@ export const EvidenceViewer: React.FC<EvidenceViewerProps> = ({
 
   if (!hasTurns && !hasCallText) {
     return (
-      <div className="bg-slate-50 border border-slate-200 rounded-xl p-8 text-center">
-        <div className="inline-flex p-3 bg-amber-50 rounded-full text-amber-600 mb-3 border border-amber-200">
-          <AlertTriangle className="w-6 h-6" />
+      <div className="bg-linear-panel border border-linear-border rounded-md p-8 text-center shadow-xs">
+        <div className="inline-flex p-2 bg-white/[0.04] rounded text-linear-dim mb-2">
+          <AlertTriangle className="w-4 h-4 text-linear-dim" />
         </div>
-        <h4 className="text-sm font-bold text-slate-800 mb-1">
-          No Usable Conversation Text Supplied
+        <h4 className="text-xs font-semibold text-linear-text font-mono mb-1">
+          No Usable Text Supplied
         </h4>
-        <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+        <p className="text-[11px] text-linear-muted max-w-md mx-auto leading-relaxed">
           {unavailableReason ||
             'This record was extracted without conversational audio or text. Per data contract rules, a missing transcript does not imply the event did not occur.'}
         </p>
@@ -58,34 +58,34 @@ export const EvidenceViewer: React.FC<EvidenceViewerProps> = ({
   });
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+    <div className="bg-linear-panel rounded-md border border-linear-border shadow-xs overflow-hidden">
       {/* Transcript Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-3.5 bg-slate-50 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-3.5 py-2 bg-linear-surface border-b border-linear-border">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
-            {sourceType === 'meeting' ? `Meeting Turns (${turns.length} segments)` : 'Adapted Call Transcript'}
+          <span className="text-xs font-semibold uppercase tracking-wider text-linear-text font-mono">
+            {sourceType === 'meeting' ? `Meeting Turns (${turns.length})` : 'Adapted Call Transcript'}
           </span>
           {sourceType === 'meeting' && (
-            <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 font-medium">
-              1-Based Turn Numbered
+            <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/[0.04] text-linear-dim font-mono">
+              1-based
             </span>
           )}
         </div>
 
-        <div className="relative w-full sm:w-64">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <div className="relative w-full sm:w-60">
+          <Search className="w-3 h-3 absolute left-2.5 top-1/2 -translate-y-1/2 text-linear-dim" />
           <input
             type="text"
-            placeholder="Search words or turn #..."
+            placeholder="Search turns..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="w-full text-xs pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 bg-white focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
+            className="w-full text-xs pl-7 pr-3 py-1 rounded border border-linear-border bg-linear-bg text-linear-text placeholder:text-linear-dim focus:outline-hidden focus:border-[#D6ED17] transition-colors"
           />
         </div>
       </div>
 
       {/* Transcript Body */}
-      <div className="max-h-[520px] overflow-y-auto p-5 space-y-4">
+      <div className="max-h-[500px] overflow-y-auto p-3 space-y-2">
         {sourceType === 'meeting' ? (
           filteredTurns.length > 0 ? (
             filteredTurns.map(turn => {
@@ -94,43 +94,43 @@ export const EvidenceViewer: React.FC<EvidenceViewerProps> = ({
                 <div
                   key={turn.turnIndex}
                   id={`turn-${turn.turnIndex}`}
-                  className={`p-3.5 rounded-lg border transition-colors ${
+                  className={`p-2.5 rounded border transition-all ${
                     isHighlighted
-                      ? 'border-indigo-400 bg-indigo-50/70 ring-2 ring-indigo-200'
-                      : 'border-slate-100 bg-slate-50/50 hover:bg-slate-50'
+                      ? 'border-[#D6ED17] bg-[#D6ED17]/10 ring-1 ring-[#D6ED17]/40'
+                      : 'border-linear-border bg-linear-surface hover:bg-linear-hover'
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">
-                        Turn {turn.turnIndex}
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[9px] font-mono font-semibold px-1.5 py-0.2 rounded bg-white/[0.05] text-[#D6ED17]">
+                        T{turn.turnIndex}
                       </span>
-                      <span className="text-xs font-semibold text-slate-900 flex items-center gap-1">
-                        <User className="w-3 h-3 text-slate-400" />
+                      <span className="text-xs font-medium text-linear-text flex items-center gap-1">
+                        <User className="w-2.5 h-2.5 text-linear-dim" />
                         {turn.speaker || 'Speaker'}
                       </span>
                     </div>
                     {turn.timecode && (
-                      <span className="text-[11px] text-slate-400 flex items-center gap-1 font-mono">
-                        <Clock className="w-3 h-3" />
+                      <span className="text-[10px] text-linear-dim flex items-center gap-1 font-mono">
+                        <Clock className="w-2.5 h-2.5" />
                         {turn.timecode}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-700 leading-relaxed pl-1">
+                  <p className="text-xs text-linear-muted leading-relaxed pl-0.5">
                     {turn.text}
                   </p>
                 </div>
               );
             })
           ) : (
-            <div className="text-center py-8 text-xs text-slate-400">
-              No turns matched search filter "{searchTerm}".
+            <div className="text-center py-8 text-xs text-linear-dim font-mono">
+              No turns matched query "{searchTerm}".
             </div>
           )
         ) : (
-          /* Call plain text with highlighted styling */
-          <div className="prose prose-slate max-w-none text-xs leading-relaxed text-slate-800 whitespace-pre-wrap bg-slate-50 p-4 rounded-lg border border-slate-100 font-mono">
+          /* Call plain text with Linear styling */
+          <div className="text-xs leading-relaxed text-linear-muted whitespace-pre-wrap bg-linear-surface p-3.5 rounded border border-linear-border font-mono">
             {callTranscript}
           </div>
         )}

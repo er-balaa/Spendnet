@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  FolderArchive, Download, RefreshCw, FileText, CheckCircle2,
-  ExternalLink, Search, ShieldCheck, Clock
+  Download, RefreshCw, Search
 } from 'lucide-react';
 import { generateExports, fetchManifest, getExportDownloadUrl } from '../services/api';
-import { RouteBadge } from '../components/RouteBadge';
 import { StatusBadge } from '../components/StatusBadge';
 
 export const ExportsPage: React.FC = () => {
@@ -60,160 +58,142 @@ export const ExportsPage: React.FC = () => {
   });
 
   return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 space-y-4 max-w-[1600px] mx-auto bg-linear-bg text-linear-text">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-linear-border pb-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-base font-semibold tracking-tight text-linear-text font-heading">
             Exports & Artifact Manifest
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Download organized output reports, verify machine-readable JSON/CSV manifests, and trace artifacts to source records.
+          <p className="text-[11px] text-linear-dim font-mono mt-0.5">
+            Download organized output reports • Machine-readable manifest.json / manifest.csv
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg shadow-2xs transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-linear-muted hover:text-linear-text bg-linear-surface border border-linear-border rounded-md transition-colors cursor-pointer disabled:opacity-50"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${generating ? 'animate-spin text-indigo-600' : ''}`} />
-            {generating ? 'Generating Archive...' : 'Regenerate Exports'}
+            <RefreshCw className={`w-3 h-3 ${generating ? 'animate-spin text-[#D6ED17]' : ''}`} />
+            <span>{generating ? 'Compiling...' : 'Regenerate'}</span>
           </button>
 
           <a
             href={getExportDownloadUrl()}
             download="spendnest_revenue_intelligence_exports.zip"
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-2xs transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#08090A] bg-[#D6ED17] hover:bg-[#cde410] rounded-md transition-all cursor-pointer shadow-xs"
           >
-            <Download className="w-3.5 h-3.5" />
-            Download ZIP Archive
+            <Download className="w-3.5 h-3.5 text-[#08090A]" />
+            <span>Download ZIP</span>
           </a>
         </div>
       </div>
 
       {message && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-md text-xs flex items-center gap-2 font-mono">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
           <span>{message}</span>
         </div>
       )}
 
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            Exported Logical Records
-          </div>
-          <div className="text-2xl font-bold text-slate-900 mt-2">{totalRecords} Records</div>
-          <div className="text-[11px] text-slate-400 mt-1">Every record mapped to physical report file</div>
+      {/* KPI stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="bg-linear-panel p-3.5 rounded-md border border-linear-border">
+          <div className="text-[10px] font-mono uppercase text-linear-dim">Logical Records</div>
+          <div className="text-xl font-semibold text-linear-text font-mono mt-1">{totalRecords}</div>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            Archive Structure
-          </div>
-          <div className="text-sm font-bold text-slate-800 mt-2">
-            <code>conversations/</code>, <code>by_route/</code>, <code>manager_brief/</code>
-          </div>
-          <div className="text-[11px] text-slate-400 mt-1">Relative paths inside ZIP archive</div>
+        <div className="bg-linear-panel p-3.5 rounded-md border border-linear-border">
+          <div className="text-[10px] font-mono uppercase text-linear-dim">Archive Structure</div>
+          <div className="text-xs font-mono text-[#D6ED17] mt-1 truncate">conversations/ • by_route/ • manager_brief/</div>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            Manifest Formats
-          </div>
-          <div className="text-sm font-bold text-slate-800 mt-2">
-            manifest.json & manifest.csv
-          </div>
-          <div className="text-[11px] text-slate-400 mt-1">
-            Generated: {generatedAt ? new Date(generatedAt).toLocaleTimeString() : 'Ready'}
+        <div className="bg-linear-panel p-3.5 rounded-md border border-linear-border">
+          <div className="text-[10px] font-mono uppercase text-linear-dim">Generated Timestamp</div>
+          <div className="text-xs font-mono text-linear-text mt-1">
+            {generatedAt ? new Date(generatedAt).toLocaleTimeString() : 'Ready'}
           </div>
         </div>
       </div>
 
       {/* Manifest Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden space-y-4">
-        <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h3 className="text-sm font-bold text-slate-900">
-              Machine-Readable Manifest
-            </h3>
-            <p className="text-[11px] text-slate-500">
-              Traces each source identity (source_type, source_id) to assigned routes, review states, and relative paths
-            </p>
-          </div>
+      <div className="bg-linear-panel rounded-md border border-linear-border overflow-hidden">
+        <div className="p-3 bg-linear-surface border-b border-linear-border flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <span className="text-xs font-mono uppercase text-linear-text font-semibold">
+            Artifact Manifest
+          </span>
 
           <div className="relative w-full sm:w-64">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-3 h-3 absolute left-2.5 top-1/2 -translate-y-1/2 text-linear-dim" />
             <input
               type="text"
               placeholder="Search manifest..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full text-xs pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 bg-white focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
+              className="w-full text-xs pl-7 pr-3 py-1 rounded border border-linear-border bg-linear-bg text-linear-text placeholder:text-linear-dim focus:outline-hidden focus:border-[#D6ED17]"
             />
           </div>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50/70 border-b border-slate-200 text-slate-500 uppercase font-semibold text-[10px]">
+            <thead className="bg-linear-surface/60 border-b border-linear-border text-linear-dim uppercase font-mono text-[10px]">
               <tr>
-                <th className="py-2.5 px-4">Ref / Type</th>
-                <th className="py-2.5 px-4">Source ID</th>
-                <th className="py-2.5 px-4">Title</th>
-                <th className="py-2.5 px-4">Assigned Routes</th>
-                <th className="py-2.5 px-4 text-center">Override?</th>
-                <th className="py-2.5 px-4">Review State</th>
-                <th className="py-2.5 px-4">Primary Output Path</th>
+                <th className="py-2 px-3">Ref / Type</th>
+                <th className="py-2 px-3">Source ID</th>
+                <th className="py-2 px-3">Title</th>
+                <th className="py-2 px-3">Assigned Routes</th>
+                <th className="py-2 px-3 text-center">Override?</th>
+                <th className="py-2 px-3">State</th>
+                <th className="py-2 px-3">Output File</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-linear-border/60 font-mono text-[11px]">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400">Loading manifest...</td>
+                  <td colSpan={7} className="py-12 text-center text-linear-dim font-mono">Loading manifest...</td>
                 </tr>
               ) : filteredManifest.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400">No records found.</td>
+                  <td colSpan={7} className="py-12 text-center text-linear-dim font-mono">No records found.</td>
                 </tr>
               ) : (
                 filteredManifest.map(item => (
-                  <tr key={`${item.source_type}-${item.source_id}`} className="hover:bg-slate-50/70">
-                    <td className="py-3 px-4 font-mono font-bold text-slate-900">
+                  <tr key={`${item.source_type}-${item.source_id}`} className="hover:bg-linear-hover transition-colors">
+                    <td className="py-2 px-3 font-semibold text-linear-text">
                       {item.record_ref}
-                      <span className="text-[10px] text-slate-400 block font-normal">{item.source_type}</span>
+                      <span className="text-[10px] text-linear-dim block uppercase font-normal">{item.source_type}</span>
                     </td>
-                    <td className="py-3 px-4 font-mono text-[11px] text-slate-500 max-w-[140px] truncate" title={item.source_id}>
+                    <td className="py-2 px-3 text-linear-dim truncate max-w-[140px]" title={item.source_id}>
                       {item.source_id}
                     </td>
-                    <td className="py-3 px-4 font-medium text-slate-800 max-w-xs truncate" title={item.title}>
+                    <td className="py-2 px-3 font-sans text-linear-text truncate max-w-xs" title={item.title}>
                       {item.title}
                     </td>
-                    <td className="py-3 px-4">
-                      <div className="flex flex-wrap gap-1">
+                    <td className="py-2 px-3">
+                      <div className="flex flex-wrap gap-1 font-sans">
                         {(item.assigned_routes || '').split(';').map((r: string) => (
-                          <span key={r.trim()} className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-medium">
+                          <span key={r.trim()} className="px-1.5 py-0.2 rounded bg-white/[0.04] text-linear-muted text-[10px] border border-linear-border">
                             {r.trim()}
                           </span>
                         ))}
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-center">
+                    <td className="py-2 px-3 text-center">
                       {item.manual_route_override ? (
-                        <span className="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 font-bold text-[10px]">
-                          Yes
+                        <span className="px-1.5 py-0.2 rounded bg-[#D6ED17] text-[#08090A] font-bold text-[10px]">
+                          YES
                         </span>
                       ) : (
-                        <span className="text-slate-400 text-[10px]">No</span>
+                        <span className="text-linear-dim text-[10px]">no</span>
                       )}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-2 px-3">
                       <StatusBadge status={item.review_status} freshness={item.analysis_freshness} />
                     </td>
-                    <td className="py-3 px-4 font-mono text-[11px] text-indigo-600 max-w-[180px] truncate" title={item.output_paths?.[0]}>
+                    <td className="py-2 px-3 text-[#D6ED17] truncate max-w-[180px]" title={item.output_paths?.[0]}>
                       {item.output_paths?.[0] || 'N/A'}
                     </td>
                   </tr>

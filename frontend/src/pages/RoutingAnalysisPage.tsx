@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Workflow, ArrowRight, ShieldCheck, HelpCircle, Layers, CheckCircle2,
-  AlertTriangle, Users, BookOpen, Edit3
+  ArrowRight, BookOpen, Edit3
 } from 'lucide-react';
 import { fetchConversations } from '../services/api';
 import { ConversationItem, RouteCategory } from '../types';
@@ -14,37 +13,31 @@ const CATEGORIES: Array<{
   name: RouteCategory;
   description: string;
   criteria: string;
-  color: string;
 }> = [
   {
     name: 'Sales Coaching',
     description: 'Conversations requiring rep enablement, script adjustments, objection handling, or attribution audits.',
-    criteria: 'Cold call resistance, rep identity discrepancies (C06), fee structure misunderstandings (M03), boundary violations (C09, C10).',
-    color: 'border-purple-500 bg-purple-50/40 text-purple-900'
+    criteria: 'Cold call resistance, rep identity discrepancies (C06), fee structure misunderstandings (M03), boundary violations (C09, C10).'
   },
   {
     name: 'Deal Next Steps',
     description: 'Active commercial opportunities requiring proposals, partner terms, or stakeholder demo scheduling.',
-    criteria: 'Qualified interest in cards/wallets, custom API developer pricing (C03), partner commission structures (M01, C07), warm referrals (C08).',
-    color: 'border-emerald-500 bg-emerald-50/40 text-emerald-900'
+    criteria: 'Qualified interest in cards/wallets, custom API developer pricing (C03), partner commission structures (M01, C07), warm referrals (C08).'
   },
   {
     name: 'Customer Follow-up',
     description: 'Post-interaction customer tasks, collateral deliveries, bug status communications, and account onboarding.',
-    criteria: 'Collateral requests (C05, C10), partner guidance documentation (M01), bug workarounds (M07), admin login fixes (M09).',
-    color: 'border-blue-500 bg-blue-50/40 text-blue-900'
+    criteria: 'Collateral requests (C05, C10), partner guidance documentation (M01), bug workarounds (M07), admin login fixes (M09).'
   },
   {
     name: 'Internal / Vendor Note',
     description: 'Software bugs, technical roadmap dependencies, vendor integrations, and internal billing SOPs.',
-    criteria: 'Vendor evaluation for e-invoicing (M02), UI form/modal bugs (M07), auth token bugs (M09), internal billing training (M10).',
-    color: 'border-amber-500 bg-amber-50/40 text-amber-900'
+    criteria: 'Vendor evaluation for e-invoicing (M02), UI form/modal bugs (M07), auth token bugs (M09), internal billing training (M10).'
   },
   {
     name: 'Human Review',
     description: 'Ambiguous calls, missing text requiring intake judgment, severe customer churn risks, or stale analysis needing human confirmation.',
-    criteria: 'Records with no usable transcript, impending card network termination (M04), stale analysis after source updates.',
-    color: 'border-rose-500 bg-rose-50/40 text-rose-900'
+    criteria: 'Records with no usable transcript, impending card network termination (M04), stale analysis after source updates.'
   }
 ];
 
@@ -78,19 +71,21 @@ export const RoutingAnalysisPage: React.FC = () => {
   const currentCategoryInfo = CATEGORIES.find(c => c.name === activeCategory)!;
 
   return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="border-b border-slate-200 pb-5">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-          Routing & Operational Taxonomy
-        </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Differentiated conversation destinations based on verified transcript evidence. Multi-route assignment enabled with full manager override capability.
-        </p>
+    <div className="p-4 sm:p-6 space-y-4 max-w-[1600px] mx-auto bg-linear-bg text-linear-text">
+      {/* Linear Header */}
+      <div className="border-b border-linear-border pb-3 flex items-center justify-between">
+        <div>
+          <h1 className="text-base font-semibold tracking-tight text-linear-text font-heading">
+            Routing Matrix & Taxonomy
+          </h1>
+          <p className="text-[11px] text-linear-dim font-mono mt-0.5">
+            Deterministic destination routing grounded in transcript evidence • Multi-route enabled
+          </p>
+        </div>
       </div>
 
-      {/* Category Tabs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      {/* Segmented Category Buttons */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
         {CATEGORIES.map(cat => {
           const count = conversations.filter(c => c.assigned_routes.includes(cat.name)).length;
           const isActive = activeCategory === cat.name;
@@ -98,21 +93,23 @@ export const RoutingAnalysisPage: React.FC = () => {
             <button
               key={cat.name}
               onClick={() => setActiveCategory(cat.name)}
-              className={`p-4 rounded-xl border text-left transition-all ${
+              className={`p-3 rounded-md border text-left transition-all cursor-pointer ${
                 isActive
-                  ? `border-l-4 ${cat.color} shadow-sm ring-2 ring-indigo-500/20`
-                  : 'bg-white border-slate-200 hover:bg-slate-50/80 text-slate-700'
+                  ? 'bg-linear-surface border-[#D6ED17] text-linear-text shadow-xs'
+                  : 'bg-linear-panel border-linear-border hover:bg-linear-surface text-linear-muted'
               }`}
             >
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs font-bold">{cat.name}</span>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  isActive ? 'bg-white shadow-2xs' : 'bg-slate-100 text-slate-600'
+              <div className="flex items-center justify-between mb-1">
+                <span className={`text-xs font-semibold ${isActive ? 'text-[#D6ED17]' : 'text-linear-text'}`}>
+                  {cat.name}
+                </span>
+                <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded ${
+                  isActive ? 'bg-[#D6ED17] text-[#08090A] font-bold' : 'bg-white/[0.04] text-linear-dim'
                 }`}>
                   {count}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 line-clamp-2">
+              <p className="text-[10px] line-clamp-2 leading-tight text-linear-dim">
                 {cat.description}
               </p>
             </button>
@@ -120,43 +117,46 @@ export const RoutingAnalysisPage: React.FC = () => {
         })}
       </div>
 
-      {/* Category Deep Dive Card */}
-      <div className={`p-6 rounded-2xl border-l-4 border bg-white shadow-xs ${currentCategoryInfo.color}`}>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Active Category Overview
+      {/* Category Deep Dive Panel */}
+      <div className="p-4 rounded-md border border-linear-border bg-linear-panel">
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-[#D6ED17]">
+              <span>Active Destination</span>
             </div>
-            <h2 className="text-lg font-bold text-slate-900 mt-0.5">
-              {currentCategoryInfo.name} ({filteredConversations.length} records assigned)
+            <h2 className="text-sm font-semibold text-linear-text">
+              {currentCategoryInfo.name} ({filteredConversations.length} records)
             </h2>
-            <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+            <p className="text-xs text-linear-muted leading-relaxed">
               {currentCategoryInfo.description}
             </p>
           </div>
-          <div className="hidden sm:block text-right">
-            <span className="text-[11px] font-semibold text-slate-500">Assignment Criteria:</span>
-            <p className="text-xs text-slate-700 max-w-sm mt-0.5">{currentCategoryInfo.criteria}</p>
+          <div className="lg:text-right max-w-md pt-2 lg:pt-0 border-t lg:border-t-0 border-linear-border">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-linear-dim">
+              Criteria
+            </span>
+            <p className="text-xs text-linear-text mt-0.5 leading-relaxed">
+              {currentCategoryInfo.criteria}
+            </p>
           </div>
         </div>
       </div>
 
       {/* Conversations in this Category */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-slate-900">
-            Conversations Routed to {activeCategory}
+      <div className="bg-linear-panel rounded-md border border-linear-border overflow-hidden">
+        <div className="px-3.5 py-2.5 bg-linear-surface border-b border-linear-border flex items-center justify-between">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-linear-text font-mono">
+            {activeCategory} ({filteredConversations.length} records)
           </h3>
-          <span className="text-xs text-slate-500">
-            {filteredConversations.length} records matching destination
-          </span>
         </div>
 
-        <div className="divide-y divide-slate-100">
+        <div className="divide-y divide-linear-border/60">
           {loading ? (
-            <div className="p-8 text-center text-xs text-slate-400">Loading records...</div>
+            <div className="p-12 text-center text-xs text-linear-dim font-mono">
+              Loading records...
+            </div>
           ) : filteredConversations.length === 0 ? (
-            <div className="p-8 text-center text-xs text-slate-400">
+            <div className="p-12 text-center text-xs text-linear-dim font-mono">
               No conversations currently assigned to {activeCategory}.
             </div>
           ) : (
@@ -164,22 +164,22 @@ export const RoutingAnalysisPage: React.FC = () => {
               <div
                 key={`${conv.source_type}-${conv.source_id}`}
                 onClick={() => navigate(`/conversations/${conv.source_type}/${conv.source_id}`)}
-                className="p-4 hover:bg-slate-50/80 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors"
+                className="p-3 hover:bg-linear-hover cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors"
               >
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="font-mono text-xs font-semibold text-linear-text bg-white/[0.05] px-1.5 py-0.5 rounded">
                       {conv.record_ref}
                     </span>
-                    <span className="font-semibold text-xs text-slate-900">
+                    <span className="font-medium text-xs text-linear-text">
                       {conv.title}
                     </span>
                     <StatusBadge status={conv.review_status} freshness={conv.analysis_freshness} />
                   </div>
-                  <div className="text-xs text-slate-500 flex items-center gap-3">
-                    <span>Participant: <strong>{conv.person_name || 'Unassigned'}</strong> ({conv.person_role})</span>
+                  <div className="text-[11px] text-linear-dim flex items-center gap-2 font-mono">
+                    <span>{conv.person_name || 'Unassigned'} ({conv.person_role})</span>
                     <span>•</span>
-                    <span>Revision: <strong>v{conv.applied_revision}</strong></span>
+                    <span>Rev v{conv.applied_revision}</span>
                   </div>
                 </div>
 
@@ -199,13 +199,13 @@ export const RoutingAnalysisPage: React.FC = () => {
                       e.stopPropagation();
                       setEditingConv(conv);
                     }}
-                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md"
+                    className="p-1 text-linear-dim hover:text-[#D6ED17] hover:bg-white/[0.08] rounded transition-colors cursor-pointer"
                     title="Change Route Override"
                   >
-                    <Edit3 className="w-4 h-4" />
+                    <Edit3 className="w-3 h-3" />
                   </button>
 
-                  <ArrowRight className="w-4 h-4 text-slate-300" />
+                  <ArrowRight className="w-3.5 h-3.5 text-linear-dim" />
                 </div>
               </div>
             ))
@@ -213,17 +213,14 @@ export const RoutingAnalysisPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Difficult Routing Decision Highlight Box */}
-      <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-        <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-          <BookOpen className="w-4 h-4 text-indigo-600" />
-          <span>Case Study: Difficult Routing Decision (Cedarwave Distribution — M04)</span>
+      {/* Case Study Callout */}
+      <div className="p-3.5 bg-linear-panel rounded-md border border-linear-border space-y-1.5 text-xs">
+        <div className="flex items-center gap-1.5 font-semibold text-linear-text font-mono text-[11px]">
+          <BookOpen className="w-3 h-3 text-[#D6ED17]" />
+          <span>Case Study: Multi-Route Edge Decision (M04 — Cedarwave)</span>
         </div>
-        <p className="text-xs text-slate-600 leading-relaxed">
-          <strong>The Dilemma:</strong> In meeting M04, the customer’s existing physical card programme is shutting down due to network failures (Customer Follow-up). However, the customer has an existing INR 1.3 crore bank credit line and firmly resists another prepaid card, demanding a third-party bank-card transaction feed (Deal Next Steps vs Internal Note). Simultaneously, a support tooling bug prevented the rep from reassigning departments (Internal Note).
-        </p>
-        <p className="text-xs text-slate-600 leading-relaxed">
-          <strong>Resolution:</strong> Rather than forcing M04 into a single reductive box, our multi-route engine assigns it to <em>Customer Follow-up</em> (account migration retention), <em>Internal / Vendor Note</em> (bank feed and department tooling gap), and <em>Human Review</em> (account churn risk).
+        <p className="text-linear-muted leading-relaxed text-[11px]">
+          Customer has INR 1.3 crore bank line, physical cards shutting down, and tooling bug preventing department updates. Assigned to Customer Follow-up, Internal / Vendor Note, and Human Review rather than a single reductive bucket.
         </p>
       </div>
 

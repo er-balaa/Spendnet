@@ -1,12 +1,16 @@
 # Stage 1: Build Frontend Assets
 FROM node:22-alpine AS frontend-builder
 WORKDIR /build
-COPY frontend/package.json ./
+
+# Install dependencies first for Docker layer caching
+COPY frontend/package.json frontend/package-lock.json* ./
 RUN npm install
+
+# Build frontend production bundle
 COPY frontend/ ./
 RUN npm run build
 
-# Stage 2: Production Python Backend & Static Server
+# Stage 2: Production Python Backend & Single-Container SPA Server
 FROM python:3.12-slim
 WORKDIR /app
 
@@ -24,8 +28,9 @@ COPY backend/app ./app
 COPY backend/run.py ./
 COPY backend/tests ./tests
 
-# Copy bundled datasets
-COPY "candidate-v1.0 (3)_layout_fixed (1)(2) (3)" "./candidate-v1.0 (3)_layout_fixed (1)(2) (3)"
+# Copy seed datasets and create exports directory
+COPY data ./data
+RUN mkdir -p /app/exports
 
 # Copy built frontend from Stage 1
 COPY --from=frontend-builder /build/dist /app/frontend/dist
@@ -35,7 +40,14 @@ ENV HOST=0.0.0.0
 ENV PORT=8000
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
+ENV STORAGE_FILE_PATH=/app/data/spendnest_store.json
+ENV INITIAL_DATA_PATH=/app/data/01_initial.json
+ENV UPDATE_DATA_PATH=/app/data/02_update.json
+ENV EXPORTS_DIR=/app/exports
+ENV DATABASE_NAME=spendnest_revenue_intelligence
+ENV CORS_ORIGINS=*
 
 EXPOSE 8000
 
-CMD ["python", "run.py"]
+# Run FastAPI server binding to Render's dynamic $PORT (defaults to 8000)
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

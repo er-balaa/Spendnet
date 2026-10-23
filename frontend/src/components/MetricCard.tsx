@@ -18,21 +18,20 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   subtitle,
   denominatorExplanation,
   icon,
-  onClick,
-  accentColor = 'border-l-indigo-600'
+  onClick
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <div
       onClick={onClick}
-      className={`relative bg-white rounded-xl border border-slate-200 p-5 shadow-xs transition-all duration-200 ${
-        onClick ? 'cursor-pointer hover:border-indigo-300 hover:shadow-md hover:-translate-y-0.5' : ''
-      } border-l-4 ${accentColor}`}
+      className={`relative bg-linear-surface rounded-lg border border-linear-border p-4 transition-all duration-150 ${
+        onClick ? 'cursor-pointer hover:border-white/[0.18] hover:bg-linear-hover' : ''
+      }`}
     >
-      <div className="flex items-start justify-between">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-linear-dim font-medium">
             {title}
           </span>
           {denominatorExplanation && (
@@ -45,31 +44,35 @@ export const MetricCard: React.FC<MetricCardProps> = ({
                   e.stopPropagation();
                   setShowTooltip(!showTooltip);
                 }}
-                className="text-slate-400 hover:text-slate-600 focus:outline-hidden p-0.5"
+                className="text-linear-dim hover:text-[#D6ED17] focus:outline-hidden p-0.5 transition-colors cursor-pointer"
                 title="View metric definition"
               >
-                <Info className="w-3.5 h-3.5" />
+                <Info className="w-3 h-3" />
               </button>
               {showTooltip && (
-                <div className="absolute z-30 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-2.5 bg-slate-900 text-white text-xs rounded-lg shadow-xl pointer-events-none">
-                  <div className="font-semibold text-slate-200 mb-1">Calculation Definition:</div>
-                  <div className="text-slate-300 leading-relaxed">{denominatorExplanation}</div>
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+                <div className="absolute z-30 bottom-full left-0 mb-2 w-64 p-2.5 bg-[#1C1E22] border border-white/[0.12] text-white text-xs rounded-md shadow-xl pointer-events-none">
+                  <div className="font-semibold text-[#D6ED17] mb-1 text-[11px] font-mono">Definition:</div>
+                  <div className="text-linear-muted leading-relaxed text-[11px]">{denominatorExplanation}</div>
+                  <div className="absolute top-full left-4 border-4 border-transparent border-t-[#1C1E22]" />
                 </div>
               )}
             </div>
           )}
         </div>
-        {icon && <div className="text-slate-400 p-1.5 bg-slate-50 rounded-lg">{icon}</div>}
+        {icon && (
+          <div className="text-linear-dim">
+            {icon}
+          </div>
+        )}
       </div>
 
-      <div className="mt-3 flex items-baseline gap-2">
-        <div className="text-2xl font-bold tracking-tight text-slate-900">{value}</div>
-        {subtitle && <span className="text-xs font-medium text-slate-500">{subtitle}</span>}
+      <div className="mt-2.5 flex items-baseline gap-2">
+        <div className="text-2xl font-semibold tracking-tight text-linear-text font-mono">{value}</div>
+        {subtitle && <span className="text-[11px] text-linear-muted">{subtitle}</span>}
       </div>
 
       {denominatorExplanation && (
-        <div className="mt-2 text-[11px] text-slate-500 line-clamp-1 border-t border-slate-100 pt-2">
+        <div className="mt-2 text-[10px] text-linear-dim line-clamp-1 border-t border-linear-border pt-1.5 font-mono">
           {denominatorExplanation}
         </div>
       )}

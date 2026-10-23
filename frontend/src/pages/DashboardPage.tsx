@@ -2,23 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
-  PieChart, Pie, Cell
+  Cell
 } from 'recharts';
 import {
-  PhoneCall, Users, FileText, CheckCircle2, Clock, AlertTriangle, Filter,
-  ArrowRight, ShieldCheck, HelpCircle
+  PhoneCall, Users, FileText, CheckCircle2, AlertTriangle, Filter, ArrowRight
 } from 'lucide-react';
 import { fetchDashboardMetrics, fetchFilterOptions } from '../services/api';
 import { DashboardMetrics } from '../types';
 import { MetricCard } from '../components/MetricCard';
-import { RouteBadge } from '../components/RouteBadge';
 
 const ROUTE_COLORS: Record<string, string> = {
-  'Sales Coaching': '#9333ea',
-  'Deal Next Steps': '#059669',
-  'Customer Follow-up': '#2563eb',
-  'Internal / Vendor Note': '#d97706',
-  'Human Review': '#e11d48'
+  'Sales Coaching': '#a855f7',
+  'Deal Next Steps': '#10b981',
+  'Customer Follow-up': '#38bdf8',
+  'Internal / Vendor Note': '#f59e0b',
+  'Human Review': '#f43f5e'
 };
 
 export const DashboardPage: React.FC = () => {
@@ -61,10 +59,10 @@ export const DashboardPage: React.FC = () => {
 
   if (loading && !metrics) {
     return (
-      <div className="p-8 flex items-center justify-center min-h-[400px]">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs font-semibold text-slate-500">Calculating dashboard metrics from MongoDB...</span>
+      <div className="p-12 flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-2 text-linear-dim font-mono text-xs">
+          <div className="w-5 h-5 border-2 border-[#D6ED17] border-t-transparent rounded-full animate-spin" />
+          <span>Computing telemetry...</span>
         </div>
       </div>
     );
@@ -72,61 +70,59 @@ export const DashboardPage: React.FC = () => {
 
   if (error || !metrics) {
     return (
-      <div className="p-8">
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs">
+      <div className="p-6">
+        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-md text-rose-300 text-xs">
           {error || 'Unable to load metrics'}
         </div>
       </div>
     );
   }
 
-  // Format routing data for Recharts
   const routingChartData = Object.entries(metrics.routing_distribution.counts).map(([name, count]) => ({
     name,
     count,
     fill: ROUTE_COLORS[name] || '#64748b'
   }));
 
-  // Separate Call Reps from Meeting Organizers
   const callReps = metrics.activity_by_person.filter(p => p.role === 'Call Representative');
   const meetingOrganizers = metrics.activity_by_person.filter(p => p.role === 'Meeting Organizer');
 
   return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+    <div className="p-4 sm:p-6 space-y-5 max-w-[1600px] mx-auto bg-linear-bg text-linear-text">
+      {/* Linear Page Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-linear-border pb-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            Overview Dashboard
+          <h1 className="text-base font-semibold tracking-tight text-linear-text font-heading">
+            Telemetry Overview
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Activity and intelligence metrics for 21 August 2026 (Asia/Kolkata timezone). All numbers derived strictly from source records.
+          <p className="text-[11px] text-linear-muted font-mono mt-0.5">
+            21 August 2026 • Asia/Kolkata • {metrics.total_unique_records} Verified Records
           </p>
         </div>
 
-        {/* Dynamic Filters */}
-        <div className="flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg shadow-2xs">
-            <Filter className="w-3.5 h-3.5 text-slate-400" />
+        {/* Filter Controls */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-linear-surface border border-linear-border rounded-md text-xs">
+            <Filter className="w-3 h-3 text-linear-dim" />
             <select
               value={sourceTypeFilter}
               onChange={e => setSourceTypeFilter(e.target.value)}
-              className="text-xs bg-transparent text-slate-700 font-medium focus:outline-hidden"
+              className="bg-transparent text-linear-text text-xs focus:outline-hidden cursor-pointer"
             >
-              <option value="all">All Source Types</option>
-              <option value="call">Calls Only (30)</option>
-              <option value="meeting">Meetings Only (14)</option>
+              <option value="all">All Types</option>
+              <option value="call">Calls (30)</option>
+              <option value="meeting">Meetings (14)</option>
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg shadow-2xs">
-            <Users className="w-3.5 h-3.5 text-slate-400" />
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-linear-surface border border-linear-border rounded-md text-xs">
+            <Users className="w-3 h-3 text-linear-dim" />
             <select
               value={personFilter}
               onChange={e => setPersonFilter(e.target.value)}
-              className="text-xs bg-transparent text-slate-700 font-medium focus:outline-hidden max-w-[200px]"
+              className="bg-transparent text-linear-text text-xs focus:outline-hidden max-w-[160px] cursor-pointer"
             >
-              <option value="all">All Persons</option>
+              <option value="all">All People</option>
               <optgroup label="Call Representatives">
                 {filterOptions.persons
                   .filter(p => p.role === 'Call Representative')
@@ -150,24 +146,23 @@ export const DashboardPage: React.FC = () => {
                 setSourceTypeFilter('all');
                 setPersonFilter('all');
               }}
-              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 px-2.5 py-1.5"
+              className="text-[11px] text-[#D6ED17] hover:underline px-1.5 transition-colors cursor-pointer"
             >
-              Reset Filters
+              Reset
             </button>
           )}
         </div>
       </div>
 
-      {/* Top Headline Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Top Headline Metric Cards (Linear Pro KPI grid) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <MetricCard
           title="Total Unique Records"
           value={metrics.total_unique_records}
           subtitle={`(${metrics.total_calls} calls, ${metrics.total_meetings} meetings)`}
           denominatorExplanation="Count of distinct (source_type, source_id) composite identities matching active filter."
-          icon={<FileText className="w-5 h-5 text-indigo-600" />}
+          icon={<FileText className="w-3.5 h-3.5 text-[#D6ED17]" />}
           onClick={() => navigate('/inbox')}
-          accentColor="border-l-indigo-600"
         />
 
         <MetricCard
@@ -175,60 +170,57 @@ export const DashboardPage: React.FC = () => {
           value={`${metrics.transcript_coverage.rate}%`}
           subtitle={`${metrics.transcript_coverage.numerator} / ${metrics.transcript_coverage.denominator} records`}
           denominatorExplanation={metrics.transcript_coverage.definition}
-          icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
-          onClick={() => navigate('/inbox?has_transcript=true')}
-          accentColor="border-l-emerald-600"
+          icon={<CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+          onClick={() => navigate('/inbox?has_transcript=yes')}
         />
 
         <MetricCard
-          title="Calls Connected Rate"
+          title="Call Connected Rate"
           value={`${metrics.call_connection_metrics.stored_connection_rate.rate}%`}
           subtitle={`${metrics.call_connection_metrics.stored_connection_rate.numerator} / ${metrics.call_connection_metrics.stored_connection_rate.denominator} calls`}
           denominatorExplanation={metrics.call_connection_metrics.stored_connection_rate.definition}
-          icon={<PhoneCall className="w-5 h-5 text-blue-600" />}
-          accentColor="border-l-blue-600"
+          icon={<PhoneCall className="w-3.5 h-3.5 text-[#D6ED17]" />}
         />
 
         <MetricCard
-          title="Records Requiring Review"
+          title="Needs Review"
           value={metrics.records_requiring_review_count}
-          subtitle={`${metrics.missing_or_unusable_text_count} missing/unusable text`}
-          denominatorExplanation="Records awaiting human review, missing usable transcripts, or with stale analysis needing confirmation."
-          icon={<AlertTriangle className="w-5 h-5 text-amber-600" />}
+          subtitle={`${metrics.missing_or_unusable_text_count} missing/unusable`}
+          denominatorExplanation="Records awaiting review, missing usable transcripts, or with stale analysis."
+          icon={<AlertTriangle className="w-3.5 h-3.5 text-amber-400" />}
           onClick={() => navigate('/inbox?review_status=Awaiting%20Review')}
-          accentColor="border-l-amber-500"
         />
       </div>
 
       {/* Visual Analytics Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Routing Distribution Chart */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+        <div className="bg-linear-panel p-4 rounded-lg border border-linear-border space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-slate-900">
-                Conversation Routing Distribution
+              <h3 className="text-xs font-semibold tracking-tight text-linear-text font-mono uppercase">
+                Routing Distribution
               </h3>
-              <p className="text-[11px] text-slate-500">
-                Assigned destinations ({metrics.routing_distribution.total_assignments} assignments across {metrics.total_unique_records} records)
+              <p className="text-[11px] text-linear-dim mt-0.5">
+                {metrics.routing_distribution.total_assignments} assignments across {metrics.total_unique_records} records
               </p>
             </div>
-            <span className="text-[10px] font-semibold px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md border border-indigo-100">
-              Multi-Route Enabled
+            <span className="text-[10px] font-mono px-1.5 py-0.2 bg-white/[0.04] text-linear-muted border border-linear-border rounded">
+              multi-route
             </span>
           </div>
 
-          <div className="h-64">
+          <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={routingChartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-15} textAnchor="end" />
-                <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+              <BarChart data={routingChartData} margin={{ top: 10, right: 10, left: -25, bottom: 15 }}>
+                <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#8B909A' }} angle={-10} textAnchor="end" stroke="transparent" />
+                <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: '#8B909A' }} stroke="transparent" />
                 <Tooltip
                   formatter={(val: any) => [`${val} conversations`, 'Assigned']}
-                  contentStyle={{ borderRadius: '8px', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: '#151619', borderRadius: '6px', fontSize: '11px', border: '1px solid #23252A', color: '#F0F1F3', fontFamily: 'JetBrains Mono' }}
                 />
-                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="count" radius={[3, 3, 0, 0]}>
                   {routingChartData.map((entry, idx) => (
                     <Cell key={`cell-${idx}`} fill={entry.fill} />
                   ))}
@@ -236,83 +228,74 @@ export const DashboardPage: React.FC = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
-
-          <p className="text-[11px] text-slate-400 italic">
-            * Note: Sum of route assignments exceeds unique records because complex interactions can serve multiple operational purposes.
-          </p>
         </div>
 
         {/* Activity by Hour (Asia/Kolkata Timeline) */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+        <div className="bg-linear-panel p-4 rounded-lg border border-linear-border space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-slate-900">
-                Activity by Hour (Asia/Kolkata Timeline)
+              <h3 className="text-xs font-semibold tracking-tight text-linear-text font-mono uppercase">
+                Timeline Activity (Asia/Kolkata)
               </h3>
-              <p className="text-[11px] text-slate-500">
-                Interaction start times across Friday, 21 August 2026
+              <p className="text-[11px] text-linear-dim mt-0.5">
+                Interaction starts on Friday, 21 August 2026
               </p>
             </div>
           </div>
 
-          <div className="h-64">
+          <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={metrics.activity_by_hour} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="hour" tick={{ fontSize: 10 }} interval={2} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
-                <Tooltip contentStyle={{ borderRadius: '8px', fontSize: '12px' }} />
-                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                <Bar dataKey="calls" name="Calls" fill="#6366f1" stackId="a" />
-                <Bar dataKey="meetings" name="Meetings" fill="#06b6d4" stackId="a" radius={[4, 4, 0, 0]} />
+              <BarChart data={metrics.activity_by_hour} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="2 2" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="hour" tick={{ fontSize: 10, fill: '#8B909A' }} interval={2} stroke="transparent" />
+                <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: '#8B909A' }} stroke="transparent" />
+                <Tooltip contentStyle={{ backgroundColor: '#151619', borderRadius: '6px', fontSize: '11px', border: '1px solid #23252A', color: '#F0F1F3', fontFamily: 'JetBrains Mono' }} />
+                <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '6px' }} />
+                <Bar dataKey="calls" name="Calls" fill="#2A2F3D" stackId="a" radius={[0, 0, 0, 0]} />
+                <Bar dataKey="meetings" name="Meetings" fill="#D6ED17" stackId="a" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* Activity by Person (Call Representatives vs Meeting Organizers) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Call Representatives Table */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-bold text-slate-900">
-                Call Activity by Representative
-              </h3>
-              <p className="text-[11px] text-slate-500">
-                Sales development reps initiating phone calls
-              </p>
-            </div>
-            <span className="text-xs font-semibold text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+      {/* Tables: Rep Activity & Organizer Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Call Reps */}
+        <div className="bg-linear-panel rounded-lg border border-linear-border overflow-hidden">
+          <div className="px-3.5 py-2.5 border-b border-linear-border flex items-center justify-between bg-linear-surface">
+            <h3 className="text-xs font-semibold text-linear-text font-mono uppercase">
+              Call Activity by Rep
+            </h3>
+            <span className="text-[10px] font-mono text-[#D6ED17]">
               {callReps.length} Reps
             </span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50/70 border-b border-slate-200 text-slate-500 uppercase font-semibold text-[10px]">
+              <thead className="bg-linear-surface/50 border-b border-linear-border text-linear-dim uppercase font-mono text-[10px]">
                 <tr>
-                  <th className="py-2.5 px-4">Representative</th>
-                  <th className="py-2.5 px-4 text-center">Total Calls</th>
-                  <th className="py-2.5 px-4 text-center">Connected</th>
-                  <th className="py-2.5 px-4 text-center">Usable Text</th>
-                  <th className="py-2.5 px-4 text-right">Action</th>
+                  <th className="py-2 px-3">Rep</th>
+                  <th className="py-2 px-3 text-center">Calls</th>
+                  <th className="py-2 px-3 text-center">Connected</th>
+                  <th className="py-2 px-3 text-center">Text</th>
+                  <th className="py-2 px-3 text-right"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-linear-border/60">
                 {callReps.map(rep => (
-                  <tr key={rep.name} className="hover:bg-slate-50/70">
-                    <td className="py-3 px-4 font-semibold text-slate-900">{rep.name}</td>
-                    <td className="py-3 px-4 text-center font-mono">{rep.calls}</td>
-                    <td className="py-3 px-4 text-center font-mono text-emerald-700">{rep.connected_calls}</td>
-                    <td className="py-3 px-4 text-center font-mono text-indigo-700">{rep.usable_transcripts}</td>
-                    <td className="py-3 px-4 text-right">
+                  <tr key={rep.name} className="hover:bg-linear-hover transition-colors">
+                    <td className="py-2 px-3 font-medium text-linear-text">{rep.name}</td>
+                    <td className="py-2 px-3 text-center font-mono text-linear-muted">{rep.calls}</td>
+                    <td className="py-2 px-3 text-center font-mono text-emerald-400">{rep.connected_calls}</td>
+                    <td className="py-2 px-3 text-center font-mono text-[#D6ED17] font-semibold">{rep.usable_transcripts}</td>
+                    <td className="py-2 px-3 text-right">
                       <button
                         onClick={() => navigate(`/inbox?person=${encodeURIComponent(rep.name)}&source_type=call`)}
-                        className="text-indigo-600 hover:text-indigo-800 font-semibold inline-flex items-center gap-1"
+                        className="text-[#D6ED17] hover:underline font-mono text-[11px] inline-flex items-center gap-0.5 cursor-pointer"
                       >
-                        Inspect <ArrowRight className="w-3 h-3" />
+                        view <ArrowRight className="w-2.5 h-2.5" />
                       </button>
                     </td>
                   </tr>
@@ -322,49 +305,39 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Meeting Organizers Table */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-1.5">
-                <h3 className="text-sm font-bold text-slate-900">
-                  Meeting Activity by Organizer
-                </h3>
-                <span className="text-[10px] bg-amber-50 text-amber-700 border border-amber-200 rounded px-1.5 py-0.5 font-medium" title="Organizer != Confirmed Rep">
-                  Organizer != Sales Rep
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500">
-                Calendar organizers (does not imply attendance or selling role)
-              </p>
-            </div>
-            <span className="text-xs font-semibold text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+        {/* Meeting Organizers */}
+        <div className="bg-linear-panel rounded-lg border border-linear-border overflow-hidden">
+          <div className="px-3.5 py-2.5 border-b border-linear-border flex items-center justify-between bg-linear-surface">
+            <h3 className="text-xs font-semibold text-linear-text font-mono uppercase">
+              Meeting Organizers
+            </h3>
+            <span className="text-[10px] font-mono text-linear-dim">
               {meetingOrganizers.length} Organizers
             </span>
           </div>
 
-          <div className="overflow-x-auto max-h-[320px] overflow-y-auto">
+          <div className="overflow-x-auto max-h-[240px] overflow-y-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50/70 border-b border-slate-200 text-slate-500 uppercase font-semibold text-[10px] sticky top-0">
+              <thead className="bg-linear-surface/50 border-b border-linear-border text-linear-dim uppercase font-mono text-[10px] sticky top-0 backdrop-blur-xs">
                 <tr>
-                  <th className="py-2.5 px-4">Organizer Email</th>
-                  <th className="py-2.5 px-4 text-center">Meetings</th>
-                  <th className="py-2.5 px-4 text-center">Usable Text</th>
-                  <th className="py-2.5 px-4 text-right">Action</th>
+                  <th className="py-2 px-3">Organizer</th>
+                  <th className="py-2 px-3 text-center">Meetings</th>
+                  <th className="py-2 px-3 text-center">Text</th>
+                  <th className="py-2 px-3 text-right"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-linear-border/60">
                 {meetingOrganizers.map(org => (
-                  <tr key={org.name} className="hover:bg-slate-50/70">
-                    <td className="py-3 px-4 font-semibold text-slate-900 font-mono text-[11px]">{org.name}</td>
-                    <td className="py-3 px-4 text-center font-mono">{org.meetings}</td>
-                    <td className="py-3 px-4 text-center font-mono text-indigo-700">{org.usable_transcripts}</td>
-                    <td className="py-3 px-4 text-right">
+                  <tr key={org.name} className="hover:bg-linear-hover transition-colors">
+                    <td className="py-2 px-3 font-mono text-[11px] text-linear-text">{org.name}</td>
+                    <td className="py-2 px-3 text-center font-mono text-linear-muted">{org.meetings}</td>
+                    <td className="py-2 px-3 text-center font-mono text-[#D6ED17] font-semibold">{org.usable_transcripts}</td>
+                    <td className="py-2 px-3 text-right">
                       <button
                         onClick={() => navigate(`/inbox?person=${encodeURIComponent(org.name)}&source_type=meeting`)}
-                        className="text-indigo-600 hover:text-indigo-800 font-semibold inline-flex items-center gap-1"
+                        className="text-[#D6ED17] hover:underline font-mono text-[11px] inline-flex items-center gap-0.5 cursor-pointer"
                       >
-                        Inspect <ArrowRight className="w-3 h-3" />
+                        view <ArrowRight className="w-2.5 h-2.5" />
                       </button>
                     </td>
                   </tr>

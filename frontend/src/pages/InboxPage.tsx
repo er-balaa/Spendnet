@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
-  Search, Filter, Phone, Video, Calendar, Clock, CheckCircle,
-  AlertCircle, Edit3, ArrowUpDown, RefreshCw, FileText
+  Search, Phone, Video, Edit3, ArrowUpDown, RefreshCw, AlertCircle, CheckCircle,
+  Filter, X
 } from 'lucide-react';
 import { fetchConversations, fetchFilterOptions } from '../services/api';
 import { ConversationItem } from '../types';
@@ -12,7 +12,7 @@ import { RouteEditorModal } from '../components/RouteEditorModal';
 
 export const InboxPage: React.FC = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [conversations, setConversations] = useState<ConversationItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +69,7 @@ export const InboxPage: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       loadData();
-    }, 300);
+    }, 250);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
@@ -85,191 +85,185 @@ export const InboxPage: React.FC = () => {
   const safeConversations = Array.isArray(conversations) ? conversations : [];
 
   return (
-    <div className="p-8 space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              Conversation Inbox
-            </h1>
-            <span className="px-2.5 py-0.5 text-xs font-semibold bg-indigo-50 text-indigo-700 rounded-full border border-indigo-100">
-              {safeConversations.length} records
-            </span>
-          </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Review inbound and outbound customer interactions, verify transcripts, and manage routing destinations.
-          </p>
+    <div className="p-4 sm:p-6 space-y-4 max-w-[1600px] mx-auto bg-linear-bg text-linear-text">
+      {/* Linear Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-linear-border pb-3">
+        <div className="flex items-center gap-2.5">
+          <h1 className="text-base font-semibold tracking-tight text-linear-text font-heading">
+            Inbox
+          </h1>
+          <span className="px-2 py-0.5 text-[11px] font-mono text-[#D6ED17] bg-[#D6ED17]/10 border border-[#D6ED17]/30 rounded">
+            {safeConversations.length} items
+          </span>
+          <span className="text-[11px] text-linear-dim hidden md:inline">
+            • 44 verified source records (Asia/Kolkata)
+          </span>
         </div>
 
-        <button
-          onClick={loadData}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg shadow-2xs self-start sm:self-auto"
-        >
-          <RefreshCw className="w-3.5 h-3.5" />
-          Refresh
-        </button>
+        {/* Action Bar */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={loadData}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-linear-muted hover:text-linear-text bg-linear-surface hover:bg-linear-hover border border-linear-border rounded-md transition-colors cursor-pointer"
+            title="Refresh records (R)"
+          >
+            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin text-[#D6ED17]' : ''}`} />
+            <span>Sync</span>
+          </button>
+        </div>
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs flex items-center justify-between shadow-2xs">
+        <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-md text-rose-300 text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
             <span>{error}</span>
           </div>
           <button
             onClick={loadData}
-            className="px-2.5 py-1 text-xs font-semibold text-rose-700 bg-white border border-rose-200 rounded-md hover:bg-rose-100"
+            className="px-2.5 py-0.5 text-xs text-rose-300 bg-white/[0.06] border border-rose-500/40 rounded hover:bg-white/[0.1] cursor-pointer"
           >
             Retry
           </button>
         </div>
       )}
 
-      {/* Filters Bar */}
-      <div id="tour-inbox-filters" className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          {/* Search */}
-          <div className="relative lg:col-span-1">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search title, ref, rep..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className="w-full text-xs pl-8 pr-3 py-2 rounded-lg border border-slate-200 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 bg-slate-50/50"
-            />
-          </div>
-
-          {/* Source Type Filter */}
-          <div>
-            <select
-              value={sourceType}
-              onChange={e => setSourceType(e.target.value)}
-              className="w-full text-xs p-2 rounded-lg border border-slate-200 bg-white font-medium text-slate-700 focus:outline-hidden"
-            >
-              <option value="all">All Types (Calls & Meetings)</option>
-              <option value="call">Calls Only (30)</option>
-              <option value="meeting">Meetings Only (14)</option>
-            </select>
-          </div>
-
-          {/* Person Filter */}
-          <div>
-            <select
-              value={person}
-              onChange={e => setPerson(e.target.value)}
-              className="w-full text-xs p-2 rounded-lg border border-slate-200 bg-white font-medium text-slate-700 focus:outline-hidden"
-            >
-              <option value="all">All People</option>
-              <optgroup label="Call Representatives">
-                {filterOptions.persons
-                  .filter(p => p.role === 'Call Representative')
-                  .map(p => (
-                    <option key={p.name} value={p.name}>{p.name} (Rep)</option>
-                  ))}
-              </optgroup>
-              <optgroup label="Meeting Organizers">
-                {filterOptions.persons
-                  .filter(p => p.role === 'Meeting Organizer')
-                  .map(p => (
-                    <option key={p.name} value={p.name}>{p.name} (Organizer)</option>
-                  ))}
-              </optgroup>
-            </select>
-          </div>
-
-          {/* Review Status Filter */}
-          <div>
-            <select
-              value={reviewStatus}
-              onChange={e => setReviewStatus(e.target.value)}
-              className="w-full text-xs p-2 rounded-lg border border-slate-200 bg-white font-medium text-slate-700 focus:outline-hidden"
-            >
-              <option value="all">All Review States</option>
-              <option value="Reviewed">Reviewed</option>
-              <option value="Awaiting Review">Awaiting Review</option>
-              <option value="Under Review">Under Review</option>
-              <option value="Missing Transcript">Missing Transcript</option>
-              <option value="Unusable Text">Unusable Text</option>
-            </select>
-          </div>
-
-          {/* Transcript Availability Filter */}
-          <div>
-            <select
-              value={hasTranscript}
-              onChange={e => setHasTranscript(e.target.value)}
-              className="w-full text-xs p-2 rounded-lg border border-slate-200 bg-white font-medium text-slate-700 focus:outline-hidden"
-            >
-              <option value="all">All Transcripts</option>
-              <option value="yes">Usable Text Available</option>
-              <option value="no">Missing / No Speech</option>
-            </select>
+      {/* Linear Filter Toolbar */}
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        {/* Search Input */}
+        <div className="relative flex-1 min-w-[220px] max-w-md">
+          <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-linear-dim" />
+          <input
+            type="text"
+            placeholder="Filter records by title, ref, person..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="w-full text-xs pl-8 pr-12 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text placeholder:text-linear-dim focus:outline-hidden focus:border-[#D6ED17]/80 transition-colors"
+          />
+          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            <kbd className="kbd">/</kbd>
           </div>
         </div>
 
-        {/* Clear Filters Button */}
+        {/* Source Type Filter */}
+        <select
+          value={sourceType}
+          onChange={e => setSourceType(e.target.value)}
+          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer"
+        >
+          <option value="all">All Types</option>
+          <option value="call">Calls (30)</option>
+          <option value="meeting">Meetings (14)</option>
+        </select>
+
+        {/* Person Filter */}
+        <select
+          value={person}
+          onChange={e => setPerson(e.target.value)}
+          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer max-w-[160px]"
+        >
+          <option value="all">All People</option>
+          <optgroup label="Call Representatives">
+            {filterOptions.persons
+              .filter(p => p.role === 'Call Representative')
+              .map(p => (
+                <option key={p.name} value={p.name}>{p.name}</option>
+              ))}
+          </optgroup>
+          <optgroup label="Meeting Organizers">
+            {filterOptions.persons
+              .filter(p => p.role === 'Meeting Organizer')
+              .map(p => (
+                <option key={p.name} value={p.name}>{p.name}</option>
+              ))}
+          </optgroup>
+        </select>
+
+        {/* Review Status Filter */}
+        <select
+          value={reviewStatus}
+          onChange={e => setReviewStatus(e.target.value)}
+          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer"
+        >
+          <option value="all">All Review States</option>
+          <option value="Reviewed">Reviewed</option>
+          <option value="Awaiting Review">Awaiting Review</option>
+          <option value="Under Review">Under Review</option>
+          <option value="Missing Transcript">Missing Transcript</option>
+          <option value="Unusable Text">Unusable Text</option>
+        </select>
+
+        {/* Transcript Filter */}
+        <select
+          value={hasTranscript}
+          onChange={e => setHasTranscript(e.target.value)}
+          className="text-xs px-2.5 py-1.5 rounded-md border border-linear-border bg-linear-surface text-linear-text font-medium focus:outline-hidden cursor-pointer"
+        >
+          <option value="all">All Transcripts</option>
+          <option value="yes">Usable Text</option>
+          <option value="no">Missing / Silent</option>
+        </select>
+
+        {/* Clear Filters */}
         {(sourceType !== 'all' || person !== 'all' || reviewStatus !== 'all' || hasTranscript !== 'all' || searchTerm) && (
-          <div className="flex justify-end pt-1">
-            <button
-              onClick={() => {
-                setSourceType('all');
-                setPerson('all');
-                setReviewStatus('all');
-                setHasTranscript('all');
-                setSearchTerm('');
-              }}
-              className="text-xs font-semibold text-indigo-600 hover:text-indigo-800"
-            >
-              Clear all active filters
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              setSourceType('all');
+              setPerson('all');
+              setReviewStatus('all');
+              setHasTranscript('all');
+              setSearchTerm('');
+            }}
+            className="inline-flex items-center gap-1 text-[11px] text-[#D6ED17] hover:underline px-1.5 py-1 transition-colors cursor-pointer"
+          >
+            <X className="w-3 h-3" />
+            <span>Reset</span>
+          </button>
         )}
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+      {/* Linear Ultra-Dense Table */}
+      <div className="bg-linear-panel rounded-lg border border-linear-border overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-semibold text-[10px]">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead className="bg-linear-surface border-b border-linear-border text-linear-dim uppercase font-mono font-semibold text-[10px] tracking-wider select-none">
               <tr>
-                <th className="py-3 px-4 cursor-pointer hover:bg-slate-100/70" onClick={() => toggleSort('record_ref')}>
+                <th className="py-2.5 px-3 cursor-pointer hover:text-linear-text w-28" onClick={() => toggleSort('record_ref')}>
                   <div className="flex items-center gap-1">
-                    <span>Ref / Type</span>
-                    <ArrowUpDown className="w-3 h-3" />
+                    <span>ID / Type</span>
+                    <ArrowUpDown className="w-2.5 h-2.5" />
                   </div>
                 </th>
-                <th className="py-3 px-4">Title / Context</th>
-                <th className="py-3 px-4">Participant & Role</th>
-                <th className="py-3 px-4 cursor-pointer hover:bg-slate-100/70" onClick={() => toggleSort('started_at')}>
+                <th className="py-2.5 px-3">Title / Counterparty</th>
+                <th className="py-2.5 px-3 w-40">Participant</th>
+                <th className="py-2.5 px-3 cursor-pointer hover:text-linear-text w-32" onClick={() => toggleSort('started_at')}>
                   <div className="flex items-center gap-1">
-                    <span>Date & Time</span>
-                    <ArrowUpDown className="w-3 h-3" />
+                    <span>Timestamp</span>
+                    <ArrowUpDown className="w-2.5 h-2.5" />
                   </div>
                 </th>
-                <th className="py-3 px-4 text-center">Transcript</th>
-                <th className="py-3 px-4">Assigned Routes</th>
-                <th className="py-3 px-4">Review State</th>
-                <th className="py-3 px-4 text-center">Revision</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+                <th className="py-2.5 px-3 text-center w-24">Text</th>
+                <th className="py-2.5 px-3">Assigned Routes</th>
+                <th className="py-2.5 px-3 w-36">Status</th>
+                <th className="py-2.5 px-3 text-center w-16">Rev</th>
+                <th className="py-2.5 px-3 text-right w-12"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-linear-border/60">
               {loading ? (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-slate-400">
+                  <td colSpan={9} className="py-12 text-center text-linear-dim font-mono">
                     <div className="flex flex-col items-center gap-2">
-                      <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-                      <span>Loading records...</span>
+                      <div className="w-4 h-4 border-2 border-[#D6ED17] border-t-transparent rounded-full animate-spin" />
+                      <span className="text-xs">Fetching records...</span>
                     </div>
                   </td>
                 </tr>
               ) : safeConversations.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-slate-500">
-                    <div className="flex flex-col items-center gap-3">
-                      <p className="text-sm font-medium text-slate-600">No conversations matched the filter criteria.</p>
+                  <td colSpan={9} className="py-12 text-center text-linear-dim font-mono">
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-xs">No records matching active filter query.</p>
                       <button
                         type="button"
                         onClick={() => {
@@ -282,9 +276,9 @@ export const InboxPage: React.FC = () => {
                           setOrder('asc');
                           loadData();
                         }}
-                        className="px-3.5 py-1.5 text-xs font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors shadow-2xs cursor-pointer"
+                        className="px-2.5 py-1 text-xs text-linear-text bg-linear-surface border border-linear-border rounded hover:bg-linear-hover transition-colors"
                       >
-                        Reset All Filters & Load 44 Records
+                        Reset filters
                       </button>
                     </div>
                   </td>
@@ -294,68 +288,64 @@ export const InboxPage: React.FC = () => {
                   <tr
                     key={`${conv.source_type}-${conv.source_id}`}
                     onClick={() => navigate(`/conversations/${conv.source_type}/${conv.source_id}`)}
-                    className="hover:bg-slate-50/80 cursor-pointer transition-colors"
+                    className="hover:bg-linear-hover cursor-pointer transition-colors group"
                   >
                     {/* Ref & Type */}
-                    <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
-                      <div className="flex items-center gap-2">
+                    <td className="py-2 px-3 font-mono text-linear-text whitespace-nowrap">
+                      <div className="flex items-center gap-1.5">
                         {conv.source_type === 'call' ? (
-                          <div className="p-1 rounded-md bg-indigo-50 text-indigo-600" title="Phone Call">
-                            <Phone className="w-3.5 h-3.5" />
-                          </div>
+                          <span title="Phone Call"><Phone className="w-3 h-3 text-blue-400 shrink-0" /></span>
                         ) : (
-                          <div className="p-1 rounded-md bg-cyan-50 text-cyan-600" title="Meeting">
-                            <Video className="w-3.5 h-3.5" />
-                          </div>
+                          <span title="Meeting"><Video className="w-3 h-3 text-emerald-400 shrink-0" /></span>
                         )}
-                        <span>{conv.record_ref}</span>
+                        <span className="font-semibold text-xs">{conv.record_ref}</span>
                       </div>
                     </td>
 
                     {/* Title */}
-                    <td className="py-3.5 px-4 max-w-xs">
-                      <div className="font-semibold text-slate-900 truncate" title={conv.title}>
+                    <td className="py-2 px-3 max-w-sm">
+                      <div className="font-medium text-linear-text truncate leading-tight" title={conv.title}>
                         {conv.title}
                       </div>
-                      <div className="text-[11px] text-slate-400 font-mono truncate" title={conv.source_id}>
-                        ID: {conv.source_id.slice(0, 16)}...
+                      <div className="text-[10px] text-linear-dim font-mono truncate" title={conv.source_id}>
+                        {conv.source_id.slice(0, 20)}...
                       </div>
                     </td>
 
                     {/* Participant & Role */}
-                    <td className="py-3.5 px-4">
-                      <div className="font-medium text-slate-800">
+                    <td className="py-2 px-3 whitespace-nowrap">
+                      <div className="text-linear-text font-medium text-xs">
                         {conv.person_name || 'Unassigned'}
                       </div>
-                      <div className="text-[10px] text-slate-400">
+                      <div className="text-[10px] text-linear-dim font-mono">
                         {conv.person_role}
                       </div>
                     </td>
 
-                    {/* Date & Time */}
-                    <td className="py-3.5 px-4 whitespace-nowrap text-slate-600">
-                      <div>21 Aug 2026</div>
-                      <div className="text-[11px] text-slate-400 font-mono">
+                    {/* Timestamp */}
+                    <td className="py-2 px-3 whitespace-nowrap font-mono text-[11px] text-linear-muted">
+                      <div>21 Aug</div>
+                      <div className="text-[10px] text-linear-dim">
                         {conv.started_at ? conv.started_at.slice(11, 19) : '--:--:--'} UTC
                       </div>
                     </td>
 
                     {/* Transcript status */}
-                    <td className="py-3.5 px-4 text-center">
+                    <td className="py-2 px-3 text-center whitespace-nowrap">
                       {conv.has_usable_transcript ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          <CheckCircle className="w-3 h-3" />
-                          Usable
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          <CheckCircle className="w-2.5 h-2.5" />
+                          yes
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-500 border border-slate-200">
-                          Missing
+                        <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-mono text-linear-dim bg-white/[0.03]">
+                          no
                         </span>
                       )}
                     </td>
 
                     {/* Assigned Routes */}
-                    <td className="py-3.5 px-4 max-w-sm">
+                    <td className="py-2 px-3">
                       <div className="flex flex-wrap gap-1">
                         {conv.assigned_routes.map(r => (
                           <RouteBadge
@@ -368,30 +358,32 @@ export const InboxPage: React.FC = () => {
                     </td>
 
                     {/* Review State */}
-                    <td className="py-3.5 px-4">
+                    <td className="py-2 px-3 whitespace-nowrap">
                       <StatusBadge status={conv.review_status} freshness={conv.analysis_freshness} />
                     </td>
 
                     {/* Revision */}
-                    <td className="py-3.5 px-4 text-center font-mono">
+                    <td className="py-2 px-3 text-center font-mono">
                       <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                        conv.applied_revision === 2 ? 'bg-indigo-100 text-indigo-800' : 'bg-slate-100 text-slate-600'
+                        conv.applied_revision === 2
+                          ? 'bg-[#D6ED17] text-[#08090A]'
+                          : 'bg-white/[0.05] text-linear-dim'
                       }`}>
                         v{conv.applied_revision}
                       </span>
                     </td>
 
                     {/* Actions */}
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="py-2 px-3 text-right">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setEditingConv(conv);
                         }}
-                        className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors"
-                        title="Edit Routes / Override"
+                        className="p-1 text-linear-dim hover:text-[#D6ED17] hover:bg-white/[0.08] rounded transition-colors cursor-pointer"
+                        title="Override routes (E)"
                       >
-                        <Edit3 className="w-4 h-4" />
+                        <Edit3 className="w-3 h-3" />
                       </button>
                     </td>
                   </tr>

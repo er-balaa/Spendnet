@@ -85,43 +85,41 @@ export const RouteEditorModal: React.FC<RouteEditorModalProps> = ({
     }
   };
 
-  const hasChanges = JSON.stringify(selectedRoutes.sort()) !== JSON.stringify(suggestedRoutes.sort());
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-      <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
+      <div className="bg-linear-panel rounded-lg max-w-lg w-full shadow-2xl border border-linear-border overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-linear-text">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-linear-border bg-linear-surface">
           <div>
-            <div className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">
+            <div className="text-[10px] font-mono font-semibold text-[#D6ED17] uppercase tracking-wider">
               Manual Route Override
             </div>
-            <h3 className="text-base font-bold text-slate-900">
+            <h3 className="text-xs font-semibold text-linear-text font-mono mt-0.5">
               {recordRef} — {title}
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200/60"
+            className="text-linear-dim hover:text-linear-text p-1 rounded hover:bg-white/[0.06] transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="p-6 space-y-5">
+        <div className="p-4 space-y-4">
           {error && (
-            <div className="p-3 text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 shrink-0" />
+            <div className="p-2.5 text-xs text-rose-300 bg-rose-500/10 border border-rose-500/30 rounded flex items-center gap-2">
+              <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Automated Suggestions:
+            <label className="block text-[11px] font-mono text-linear-dim uppercase mb-1">
+              Automated Suggestions
             </label>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1">
               {suggestedRoutes.map(r => (
-                <span key={r} className="px-2.5 py-1 text-xs rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                <span key={r} className="px-2 py-0.5 text-[10px] rounded bg-linear-surface text-linear-muted border border-linear-border font-mono">
                   {r}
                 </span>
               ))}
@@ -129,31 +127,31 @@ export const RouteEditorModal: React.FC<RouteEditorModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-2">
-              Assign Routes (Select one or more destinations):
+            <label className="block text-[11px] font-mono text-linear-dim uppercase mb-1.5">
+              Assign Routes (Multi-select)
             </label>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {ALL_CATEGORIES.map(category => {
                 const isChecked = selectedRoutes.includes(category);
                 return (
                   <label
                     key={category}
-                    className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
+                    className={`flex items-center justify-between p-2.5 rounded border cursor-pointer transition-all ${
                       isChecked
-                        ? 'border-indigo-600 bg-indigo-50/50 text-indigo-950'
-                        : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                        ? 'border-[#D6ED17] bg-[#D6ED17]/10 text-linear-text'
+                        : 'border-linear-border bg-linear-surface hover:bg-linear-hover text-linear-muted'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5">
                       <input
                         type="checkbox"
                         checked={isChecked}
                         onChange={() => handleToggleRoute(category)}
-                        className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300"
+                        className="w-3.5 h-3.5 rounded accent-[#D6ED17]"
                       />
-                      <span className="text-sm font-medium">{category}</span>
+                      <span className="text-xs font-medium">{category}</span>
                     </div>
-                    {isChecked && <Check className="w-4 h-4 text-indigo-600" />}
+                    {isChecked && <Check className="w-3.5 h-3.5 text-[#D6ED17]" />}
                   </label>
                 );
               })}
@@ -161,30 +159,30 @@ export const RouteEditorModal: React.FC<RouteEditorModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Manager Review Notes & Justification (Optional):
+            <label className="block text-[11px] font-mono text-linear-dim uppercase mb-1">
+              Review Notes (Optional)
             </label>
             <textarea
-              rows={3}
+              rows={2}
               value={notes}
               onChange={e => setNotes(e.target.value)}
-              placeholder="Explain the operational rationale for this routing decision..."
-              className="w-full text-xs p-3 rounded-lg border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Explain the operational rationale for this override..."
+              className="w-full text-xs p-2.5 rounded border border-linear-border bg-linear-surface text-linear-text placeholder:text-linear-dim focus:outline-hidden focus:border-[#D6ED17]"
             />
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-6 py-4 bg-slate-50 border-t border-slate-100">
+        <div className="flex items-center justify-between px-4 py-2.5 bg-linear-surface border-t border-linear-border text-xs">
           <div>
             {manualOverride && (
               <button
                 type="button"
                 onClick={handleReset}
                 disabled={isSubmitting}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-200/60 disabled:opacity-50"
+                className="inline-flex items-center gap-1 text-[11px] font-mono text-linear-dim hover:text-linear-text transition-colors disabled:opacity-50 cursor-pointer"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
-                Reset to Suggested
+                <RotateCcw className="w-3 h-3" />
+                Reset
               </button>
             )}
           </div>
@@ -193,7 +191,7 @@ export const RouteEditorModal: React.FC<RouteEditorModalProps> = ({
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-200/60 rounded-lg"
+              className="px-3 py-1 text-xs text-linear-muted hover:text-linear-text transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -201,10 +199,10 @@ export const RouteEditorModal: React.FC<RouteEditorModalProps> = ({
               type="button"
               onClick={handleSave}
               disabled={isSubmitting}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-xs disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-[#08090A] bg-[#D6ED17] hover:bg-[#cde410] rounded transition-all cursor-pointer shadow-xs disabled:opacity-50"
             >
-              <Save className="w-3.5 h-3.5" />
-              {isSubmitting ? 'Saving...' : 'Save Override'}
+              <Save className="w-3 h-3 text-[#08090A]" />
+              <span>Save</span>
             </button>
           </div>
         </div>

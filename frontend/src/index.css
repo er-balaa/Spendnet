@@ -3,11 +3,170 @@
 @tailwind utilities;
 
 :root {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  --color-volt: #D6ED17;
+  --color-graphite: #606060;
+  letter-spacing: -0.011em;
+}
+
+/* Light Theme Variables */
+html.light, html:not(.dark) {
+  color-scheme: light;
+}
+
+html.light body, html:not(.dark) body {
+  background-color: #F6F7F9;
+  color: #111215;
+}
+
+/* Dark Theme Variables (Linear Default) */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #08090A;
+  color: #F0F1F3;
 }
 
 body {
   margin: 0;
-  background-color: #f8fafc;
-  color: #0f172a;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Linear-style typography: tight kerning and clean weights */
+h1, h2, h3, h4, h5, h6, .font-heading, .font-display {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  letter-spacing: -0.022em;
+  font-weight: 600;
+}
+
+p, span, div, a, label, li, td, th {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Raycast / Linear Keyboard Shortcut Badges */
+kbd, .kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #8B909A;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+html:not(.dark) kbd, html:not(.dark) .kbd {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: #606060;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+/* -------------------------------------------------------------
+   Dynamic Theme Adaptations for Light Mode
+   ------------------------------------------------------------- */
+html:not(.dark) .bg-linear-bg,
+html:not(.dark) .bg-\[\#08090A\],
+html:not(.dark) .bg-\[\#090A0D\] {
+  background-color: #F6F7F9 !important;
+}
+
+html:not(.dark) .bg-linear-panel,
+html:not(.dark) .bg-\[\#0F1012\],
+html:not(.dark) .bg-\[\#0E1015\] {
+  background-color: #FFFFFF !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html:not(.dark) .bg-linear-surface,
+html:not(.dark) .bg-\[\#151619\],
+html:not(.dark) .bg-\[\#14171E\] {
+  background-color: #FFFFFF !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+html:not(.dark) .bg-linear-hover,
+html:not(.dark) .bg-\[\#1C1E22\],
+html:not(.dark) .bg-\[\#181C24\] {
+  background-color: #F1F3F6 !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+html:not(.dark) .text-linear-text,
+html:not(.dark) .text-\[\#F0F1F3\],
+html:not(.dark) .text-\[\#F3F4F6\] {
+  color: #111215 !important;
+}
+
+html:not(.dark) .text-linear-muted,
+html:not(.dark) .text-\[\#8B909A\],
+html:not(.dark) .text-\[\#9CA3AF\] {
+  color: #5D636F !important;
+}
+
+html:not(.dark) .text-\[\#868A94\],
+html:not(.dark) .text-linear-dim {
+  color: #8C919D !important;
+}
+
+html:not(.dark) .border-linear-border,
+html:not(.dark) .border-white\/\[0\.08\],
+html:not(.dark) .border-white\/\[0\.06\],
+html:not(.dark) .border-white\/\[0\.1\] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html:not(.dark) header {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html:not(.dark) aside {
+  background-color: #FCFCFD !important;
+  border-right-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html:not(.dark) select option {
+  background-color: #FFFFFF !important;
+  color: #111215 !important;
+}
+
+/* Linear Ultra-minimal 4px scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.28);
 }

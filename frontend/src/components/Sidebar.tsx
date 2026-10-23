@@ -7,9 +7,7 @@ import {
   FileText,
   FolderArchive,
   RefreshCw,
-  HelpCircle,
-  Presentation,
-  Lightbulb
+  HelpCircle
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -21,50 +19,56 @@ export const Sidebar: React.FC<SidebarProps> = ({ recordsCount, onOpenTour }) =>
   const navItems = [
     {
       to: '/',
-      label: 'Overview Dashboard',
+      label: 'Overview',
       icon: LayoutDashboard,
-      badge: null
+      badge: null,
+      shortcut: '1'
     },
     {
       to: '/inbox',
-      label: 'Conversation Inbox',
+      label: 'Inbox',
       icon: Inbox,
-      badge: recordsCount ? String(recordsCount) : '44'
+      badge: recordsCount ? String(recordsCount) : '44',
+      shortcut: '2'
     },
     {
       to: '/routing',
-      label: 'Routing & Analysis',
+      label: 'Routing Matrix',
       icon: Workflow,
-      badge: null
+      badge: null,
+      shortcut: '3'
     },
     {
       to: '/brief',
-      label: 'Manager Brief (21 Aug)',
+      label: 'Manager Brief',
       icon: FileText,
-      badge: 'Brief'
+      badge: '21 Aug',
+      shortcut: '4'
     },
     {
       to: '/exports',
-      label: 'Exports & Downloads',
+      label: 'Exports',
       icon: FolderArchive,
-      badge: null
+      badge: null,
+      shortcut: '5'
     },
     {
       to: '/imports',
-      label: 'Import & Replay Controls',
+      label: 'Replay Engine',
       icon: RefreshCw,
-      badge: 'Replay'
+      badge: null,
+      shortcut: '6'
     }
   ];
 
   return (
-    <aside className="w-64 shrink-0 bg-white border-r border-slate-200 min-h-[calc(100vh-61px)] flex flex-col justify-between">
-      <div className="p-4 space-y-6">
+    <aside className="w-56 shrink-0 bg-linear-panel border-r border-linear-border h-full flex flex-col justify-between select-none overflow-hidden">
+      <div className="p-2 space-y-4">
         <div>
-          <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Workspaces
+          <div className="px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-linear-dim font-mono">
+            Navigation
           </div>
-          <nav id="tour-sidebar-nav" className="space-y-1">
+          <nav id="tour-sidebar-nav" className="space-y-0.5 mt-1">
             {navItems.map(item => {
               const Icon = item.icon;
               return (
@@ -73,21 +77,32 @@ export const Sidebar: React.FC<SidebarProps> = ({ recordsCount, onOpenTour }) =>
                   to={item.to}
                   end={item.to === '/'}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${
+                    `group flex items-center justify-between px-2.5 py-1.5 text-xs rounded-md transition-all ${
                       isActive
-                        ? 'bg-indigo-50 text-indigo-700 font-bold border-l-3 border-indigo-600'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                        ? 'bg-linear-hover text-linear-text font-medium border-l-2 border-[#D6ED17]'
+                        : 'text-linear-muted hover:text-linear-text hover:bg-linear-surface'
                     }`
                   }
                 >
-                  <div className="flex items-center gap-3">
-                    <Icon className="w-4 h-4 shrink-0" />
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badge && (
-                    <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-slate-100 text-slate-600 rounded">
-                      {item.badge}
-                    </span>
+                  {({ isActive }) => (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <Icon className={`w-3.5 h-3.5 transition-colors ${isActive ? 'text-[#D6ED17]' : 'text-linear-dim group-hover:text-linear-muted'}`} />
+                        <span>{item.label}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        {item.badge && (
+                          <span className={`px-1.5 py-0.2 text-[10px] font-mono rounded ${
+                            isActive ? 'bg-[#D6ED17]/15 text-[#D6ED17]' : 'bg-white/[0.04] text-linear-dim'
+                          }`}>
+                            {item.badge}
+                          </span>
+                        )}
+                        <kbd className="kbd opacity-0 group-hover:opacity-100 transition-opacity">
+                          {item.shortcut}
+                        </kbd>
+                      </div>
+                    </>
                   )}
                 </NavLink>
               );
@@ -95,46 +110,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ recordsCount, onOpenTour }) =>
           </nav>
         </div>
 
-        {/* User Guide Interactive Tour Launcher */}
-        {onOpenTour && (
-          <button
-            type="button"
-            onClick={onOpenTour}
-            className="w-full flex items-center justify-between p-3 bg-indigo-50 hover:bg-indigo-100/80 border border-indigo-200 rounded-xl text-left transition-colors cursor-pointer group shadow-2xs"
-          >
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0">
-                <Lightbulb className="w-3.5 h-3.5" />
-              </div>
-              <div>
-                <div className="text-xs font-bold text-indigo-950 group-hover:text-indigo-700">
-                  Interactive User Guide
-                </div>
-                <div className="text-[10px] text-indigo-700">
-                  Start Feature Tour
-                </div>
-              </div>
-            </div>
-          </button>
-        )}
-
-        {/* Data Contract Guardrails Callout */}
-        <div id="tour-sidebar-rules" className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-            <HelpCircle className="w-4 h-4 text-indigo-600" />
-            <span>Data Contract Rules</span>
+        {/* Linear Compact Contract Callout */}
+        <div id="tour-sidebar-rules" className="p-2.5 bg-linear-surface border border-linear-border rounded-md space-y-1">
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-linear-text">
+            <HelpCircle className="w-3 h-3 text-[#D6ED17]" />
+            <span>Composite Key</span>
           </div>
-          <p className="text-[11px] text-slate-500 leading-relaxed">
-            Identity is composite <code className="text-indigo-700 bg-indigo-50 px-1 py-0.5 rounded font-mono">(source_type, source_id)</code>. Revisions overwrite source payload but preserve candidate analysis and manual overrides.
+          <p className="text-[10px] text-linear-dim font-mono leading-relaxed">
+            (source_type, source_id)
+          </p>
+          <p className="text-[10px] text-linear-muted leading-tight">
+            Manual overrides strictly survive imports.
           </p>
         </div>
       </div>
 
-      <div className="p-4 border-t border-slate-200 bg-slate-50/50">
-        <div className="text-[11px] text-slate-500">
-          <span className="font-semibold text-slate-700">SpendNest Revenue Intel</span>
-          <div>Assessment Delivery v2.0</div>
-        </div>
+      <div className="p-2.5 border-t border-linear-border text-[10px] text-linear-dim font-mono flex items-center justify-between">
+        <span>Linear Pro UI</span>
+        <span className="text-[#D6ED17]">v2.1</span>
       </div>
     </aside>
   );

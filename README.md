@@ -18,21 +18,21 @@ Built strictly in accordance with the Volopay recruitment assignment brief, `DAT
 ### Backend
 - **Framework:** FastAPI (Python 3.12)
 - **Validation:** Pydantic v2 schemas for request and response enforcement
-- **Database Driver:** PyMongo connected to local or remote MongoDB
-- **Architecture:** Modular separation of business logic (`services/`), database (`database.py`), routing (`routers/`), models (`models/`), and export generation (`export_service.py`)
+- **Data Layer:** Zero-dependency Local Persistent Store (`data/spendnest_store.json`) with composite identity indexing
+- **Architecture:** Modular separation of business logic (`services/`), persistence (`database.py`), routing (`routers/`), models (`models/`), and export generation (`export_service.py`)
 
-### Database
-- **Database:** MongoDB (Local or Atlas)
-- **Composite Identity:** Keyed strictly by the compound pair `(source_type, source_id)` with a unique MongoDB compound index.
-- **Contract Adherence:** Source payload replacements never erase manager route overrides; older revisions cannot overwrite newer revisions.
+### Database & Persistence
+- **Storage:** File-persisted document store adhering strictly to assignment guidelines: *"No database is required. A JSON object is a set of named fields... Persist state across browser refresh or local application restart, according to how your app runs. Local storage or a local file is sufficient."*
+- **Composite Identity:** Keyed strictly by the compound pair `(source_type, source_id)` with unique record identity enforcement.
+- **Contract Adherence:** Source payload replacements never erase manager route overrides; older revisions cannot overwrite newer revisions. Thread-safe with atomic file writes.
 
 ---
 
 ## 2. Prerequisites
 
-1. **Python:** Python 3.10+ (Tested on Python 3.12)
+1. **Python:** Python 3.10+ (Tested on Python 3.12 and 3.13)
 2. **Node.js:** Node.js 18+ (Tested on Node.js v22.16 with npm 11.5)
-3. **MongoDB:** MongoDB Community Server (Running locally on `mongodb://localhost:27017` or configured via `.env`)
+3. **Database:** None required! Zero external database or service needed.
 
 ---
 
@@ -40,43 +40,17 @@ Built strictly in accordance with the Volopay recruitment assignment brief, `DAT
 
 ### Step 1: Clone or Navigate to the Workspace
 ```bash
-cd c:\Learning\Volopay
+cd Volpay
 ```
 
-### Step 2: Configure Environment Variables (Local or MongoDB Atlas)
-Copy `.env.example` in `backend/` to `.env`.
-
-**For MongoDB Atlas Deployment:**
-```bash
-# In backend/.env or your Cloud Deployment Environment Variables
-MONGODB_URL=mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/?retryWrites=true&w=majority
-DATABASE_NAME=spendnest_revenue_intelligence
-PORT=8000
-HOST=0.0.0.0
-CORS_ORIGINS=*
-```
-> **Atlas Setup Checklist:**
-> 1. **Database Access:** Create a MongoDB Atlas Database User with read/write privileges.
-> 2. **Network Access:** Under *Network Access* in Atlas, add `0.0.0.0/0` (Allow access from anywhere) so cloud servers (Render, Railway, Vercel) can connect.
-> 3. **SRV & TLS:** `dnspython` and `certifi` are included out of the box in `backend/requirements.txt` for automatic TLS root certificate handling.
-
-**For Local MongoDB Development:**
-```bash
-MONGODB_URL=mongodb://localhost:27017
-DATABASE_NAME=spendnest_revenue_intelligence
-PORT=8000
-HOST=0.0.0.0
-CORS_ORIGINS=*
-```
-
-### Step 3: Start the Backend API
+### Step 2: Start the Backend API
 ```bash
 # Navigate to backend directory and start server
 cd backend
 python run.py
 ```
 *The FastAPI backend will start at `http://localhost:8000` with Swagger docs at `http://localhost:8000/docs`.*
-*On first startup, the application automatically initializes MongoDB indexes and seeds the final post-update demo state (both batches).*
+*On first startup, the application automatically initializes local persistent storage and seeds the final post-update demo state (both batches).*
 
 ### Step 4: Start the Frontend Application
 In a separate terminal:
@@ -242,7 +216,7 @@ exports/
 
 ---
 
-## 12. Deployment Guide (MongoDB Atlas & Cloud Hosting)
+## 12. Deployment Guide (Zero External Database Setup Required)
 
 ### A. Deploy to Render.com (Recommended — Unified 1-Click)
 1. Fork or push this repository to GitHub.
@@ -251,28 +225,20 @@ exports/
    - **Environment:** `Python`
    - **Build Command:** `pip install -r backend/requirements.txt && cd frontend && npm install && npm run build`
    - **Start Command:** `cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. In **Environment Variables**, add:
-   - `MONGODB_URL`: Your MongoDB Atlas connection string (`mongodb+srv://user:pass@cluster.mongodb.net/?retryWrites=true&w=majority`).
-   - `DATABASE_NAME`: `spendnest_revenue_intelligence`
-   - `CORS_ORIGINS`: `*`
-5. Click **Deploy**. The app will be live with both frontend and backend on your Render URL!
+4. Click **Deploy**. The app will be live with both frontend and backend on your Render URL!
 
 ### B. Deploy to Railway.app
 1. Click **New Project** → **Deploy from GitHub repo**.
 2. Railway detects the [`Procfile`](file:///c:/Learning/Volopay/Procfile) and [`Dockerfile`](file:///c:/Learning/Volopay/Dockerfile).
-3. Under **Variables**, add `MONGODB_URL` with your Atlas URI.
-4. Deploy completes and provisions a live HTTPS URL.
+3. Deploy completes and provisions a live HTTPS URL.
 
 ### C. Deploy via Docker
 ```bash
 # Build the production image (bundles frontend + FastAPI)
 docker build -t spendnest-app .
 
-# Run container with MongoDB Atlas URI
-docker run -d -p 8000:8000 \
-  -e MONGODB_URL="mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority" \
-  -e DATABASE_NAME="spendnest_revenue_intelligence" \
-  --name spendnest spendnest-app
+# Run container standalone (no external database required)
+docker run -d -p 8000:8000 --name spendnest spendnest-app
 ```
 Access at `http://localhost:8000`.
 

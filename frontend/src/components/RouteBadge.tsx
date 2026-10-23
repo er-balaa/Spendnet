@@ -9,28 +9,31 @@ export const RouteBadge: React.FC<RouteBadgeProps> = ({ route, isOverride }) => 
   const getBadgeStyle = (category: string) => {
     switch (category) {
       case 'Sales Coaching':
-        return 'bg-purple-50 text-purple-700 border-purple-200 ring-purple-500/20';
+        return 'bg-purple-500/10 text-purple-300 border-purple-500/30';
       case 'Deal Next Steps':
-        return 'bg-emerald-50 text-emerald-700 border-emerald-200 ring-emerald-500/20';
+        return 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30';
       case 'Customer Follow-up':
-        return 'bg-blue-50 text-blue-700 border-blue-200 ring-blue-500/20';
+        return 'bg-blue-500/10 text-blue-300 border-blue-500/30';
       case 'Internal / Vendor Note':
-        return 'bg-amber-50 text-amber-700 border-amber-200 ring-amber-500/20';
+        return 'bg-amber-500/10 text-amber-300 border-amber-500/30';
       case 'Human Review':
-        return 'bg-rose-50 text-rose-700 border-rose-200 ring-rose-500/20';
+        return 'bg-rose-500/10 text-rose-300 border-rose-500/30';
       default:
-        return 'bg-slate-50 text-slate-700 border-slate-200 ring-slate-500/20';
+        return 'bg-linear-surface text-linear-text border-linear-border';
     }
   };
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md border shadow-xs ${getBadgeStyle(route)}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-mono font-medium rounded-md border ${getBadgeStyle(route)} transition-all`}
       title={isOverride ? 'Manual manager override in effect' : 'Automated suggested route'}
     >
       {route}
       {isOverride && (
-        <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 ring-2 ring-indigo-200" title="Manual Override" />
+        <span
+          className="w-1.5 h-1.5 rounded-full bg-[#D6ED17] shadow-[0_0_4px_#D6ED17]"
+          title="Manual Override"
+        />
       )}
     </span>
   );
